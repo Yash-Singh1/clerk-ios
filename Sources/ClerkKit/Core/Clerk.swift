@@ -4,14 +4,14 @@
 
 // swiftlint:disable file_length
 
+import Combine
 import Foundation
 
 /**
  This is the main entrypoint class for the clerk package. It contains a number of methods and properties for interacting with the Clerk API.
  */
 @MainActor
-@Observable
-public final class Clerk {
+public final class Clerk: ObservableObject {
   /// The shared Clerk instance.
   ///
   /// Accessing this property before calling `Clerk.configure(publishableKey:options:)` will trigger an assertion failure in debug builds.
@@ -59,7 +59,7 @@ public final class Clerk {
   }
 
   /// The Client object for the current device.
-  public internal(set) var client: Client? {
+  @Published public internal(set) var client: Client? {
     didSet {
       identityController.validateClientMutation()
       // Emit session change event if the session changed
@@ -149,7 +149,6 @@ public final class Clerk {
   private var startupClientRefreshTask: Task<Void, Never>?
   private var startupClientRefreshID: UUID?
 
-  @ObservationIgnored
   lazy var startupClientRefreshTakeover = StartupClientRefreshTakeover(clerk: self)
 
   /// Changes every time this instance is reconfigured.
@@ -165,7 +164,7 @@ public final class Clerk {
   }
 
   /// The Clerk environment for the instance.
-  public internal(set) var environment: Environment? {
+  @Published public internal(set) var environment: Environment? {
     didSet {
       if let environment {
         cacheManager?.saveEnvironment(environment)
@@ -216,7 +215,6 @@ public final class Clerk {
   var sharedSessionSyncCoordinator: SharedSessionSyncCoordinator?
 
   /// Owns complete authentication identity transitions and persistence routing.
-  @ObservationIgnored
   lazy var identityController = ClerkIdentityController(clerk: self)
 
   /// Coordinates authentication state exchanged with a paired Apple Watch.
