@@ -43,7 +43,7 @@ struct AsyncButton<Label: View>: View {
       label(isRunning)
     }
     .animation(.default, value: isRunning)
-    .onChange(of: isRunning) {
+    .clerkOnChange(of: isRunning) {
       onIsRunningChanged?($1)
     }
   }

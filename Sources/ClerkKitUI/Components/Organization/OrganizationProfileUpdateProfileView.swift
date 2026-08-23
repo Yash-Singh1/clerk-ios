@@ -41,14 +41,14 @@ struct OrganizationProfileUpdateProfileView: View {
     #if os(macOS)
     .frame(minWidth: 420, maxWidth: 520)
     #endif
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
     .background(theme.colors.background)
   }
 }
 
 #Preview {
   OrganizationProfileUpdateProfileView(organization: .mock)
-    .environment(Clerk.preview { preview in
+    .environmentObject(Clerk.preview { preview in
       var membership = OrganizationMembership.mockWithUserData
       membership.permissions = [
         OrganizationSystemPermission.manageProfile.rawValue,

@@ -51,7 +51,7 @@ import SwiftUI
 /// }
 /// ```
 public struct OrganizationListView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
 
@@ -62,7 +62,7 @@ public struct OrganizationListView: View {
   private let title: LocalizedStringKey
   private let subtitle: LocalizedStringKey?
 
-  @State private var accountList = OrganizationAccountListDataSource()
+  @StateObject private var accountList = OrganizationAccountListDataSource()
   @State private var internalPath = NavigationPath()
   @State private var isSelectingAccount = false
 
@@ -148,7 +148,7 @@ public struct OrganizationListView: View {
         }
       }
       .tint(theme.colors.primary)
-      .presentationBackground(theme.colors.background)
+      .clerkPresentationBackground(theme.colors.background)
       .background(theme.colors.background)
       .clerkErrorPresenting($accountList.error, onDismiss: { _ in
         guard !accountList.hasExistingResources, user != nil else { return }

@@ -9,10 +9,10 @@ import ClerkKit
 import SwiftUI
 
 struct UserProfileAddMfaView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
-  @Environment(UserProfileSheetNavigation.self) private var navigation
+  @EnvironmentObject private var navigation: UserProfileSheetNavigation
 
   @State private var error: Error?
 
@@ -140,7 +140,7 @@ struct UserProfileAddMfaView: View {
       #if os(macOS)
       .frame(minWidth: 460, maxWidth: 620)
       #endif
-      .scrollBounceBehavior(.basedOnSize)
+      .clerkScrollBounceBasedOnSize()
     }
   }
 }

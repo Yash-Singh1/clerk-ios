@@ -9,10 +9,10 @@ import ClerkKit
 import SwiftUI
 
 struct SignInFactorTwoBackupCodeView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
-  @Environment(AuthNavigation.self) private var navigation
-  @Environment(AuthState.self) private var authState
+  @EnvironmentObject private var navigation: AuthNavigation
+  @EnvironmentObject private var authState: AuthState
 
   @FocusState private var isFocused: Bool
   @State private var fieldError: Error?
@@ -24,7 +24,7 @@ struct SignInFactorTwoBackupCodeView: View {
   let factor: Factor
 
   var body: some View {
-    @Bindable var authState = authState
+    @ObservedObject var authState = authState
 
     ScrollView {
       VStack(spacing: 0) {
@@ -52,7 +52,7 @@ struct SignInFactorTwoBackupCodeView: View {
             if let fieldError {
               ErrorText(error: fieldError, alignment: .leading)
                 .font(theme.fonts.subheadline)
-                .transition(.blurReplace.animation(.default.speed(2)))
+                .clerkBlurReplaceTransition(.default.speed(2))
                 .id(fieldError.localizedDescription)
             }
           }
@@ -93,7 +93,7 @@ struct SignInFactorTwoBackupCodeView: View {
       .padding(16)
     }
     .background(theme.colors.background)
-    .sensoryFeedback(.error, trigger: fieldError?.localizedDescription) {
+    .clerkSensoryFeedback(.error, trigger: fieldError?.localizedDescription) {
       $1 != nil
     }
   }

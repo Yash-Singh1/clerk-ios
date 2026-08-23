@@ -11,7 +11,7 @@ import SwiftUI
 struct UserProfileMfaAddTotpView: View {
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
-  @Environment(UserProfileSheetNavigation.self) private var navigation
+  @EnvironmentObject private var navigation: UserProfileSheetNavigation
 
   @State private var path = NavigationPath()
   @State private var error: Error?
@@ -123,7 +123,7 @@ struct UserProfileMfaAddTotpView: View {
     #if os(macOS)
     .frame(minWidth: 460, maxWidth: 620)
     #endif
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
     .background(theme.colors.background)
   }
 }
@@ -131,7 +131,7 @@ struct UserProfileMfaAddTotpView: View {
 #Preview {
   UserProfileMfaAddTotpView(totp: .mock)
     .clerkPreview()
-    .environment(UserProfileSheetNavigation())
+    .environmentObject(UserProfileSheetNavigation())
     .environment(\.clerkTheme, .clerk)
 }
 

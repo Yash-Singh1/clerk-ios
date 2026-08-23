@@ -9,9 +9,9 @@ import ClerkKit
 import SwiftUI
 
 struct UserProfileVerifyView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
-  @Environment(CodeLimiter.self) private var codeLimiter
+  @EnvironmentObject private var codeLimiter: CodeLimiter
   @Environment(\.dismiss) private var environmentDismiss
 
   @State private var code = ""
@@ -174,7 +174,7 @@ struct UserProfileVerifyView: View {
       .padding(24)
     }
     .clerkErrorPresenting($error)
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
     .background(theme.colors.background)
     #if os(iOS)
     .navigationBarTitleDisplayMode(.inline)
@@ -288,7 +288,7 @@ extension UserProfileVerifyView {
   NavigationStack {
     UserProfileVerifyView(mode: .email(.mock)) { _ in }
   }
-  .environment(CodeLimiter())
+  .environmentObject(CodeLimiter())
   .environment(\.clerkTheme, .clerk)
 }
 
@@ -296,7 +296,7 @@ extension UserProfileVerifyView {
   NavigationStack {
     UserProfileVerifyView(mode: .phone(.mock)) { _ in }
   }
-  .environment(CodeLimiter())
+  .environmentObject(CodeLimiter())
   .environment(\.clerkTheme, .clerk)
 }
 
@@ -304,7 +304,7 @@ extension UserProfileVerifyView {
   NavigationStack {
     UserProfileVerifyView(mode: .totp) { _ in }
   }
-  .environment(CodeLimiter())
+  .environmentObject(CodeLimiter())
   .environment(\.clerkTheme, .clerk)
 }
 

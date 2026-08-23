@@ -14,7 +14,7 @@ import AppKit
 #endif
 
 struct OrganizationProfileFormView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
 
@@ -140,17 +140,17 @@ struct OrganizationProfileFormView: View {
     ) { result in
       loadSelectedImage(result)
     }
-    .onChange(of: photosPickerItem) { _, item in
+    .clerkOnChange(of: photosPickerItem) { _, item in
       guard let item else { return }
       loadSelectedImage(item)
     }
-    .onChange(of: organizationName) { _, newValue in
+    .clerkOnChange(of: organizationName) { _, newValue in
       if mode.isCreate {
         slug = createSlug(from: newValue)
       }
       slugValidationError = nil
     }
-    .onChange(of: slug) { _, _ in
+    .clerkOnChange(of: slug) { _, _ in
       slugValidationError = nil
     }
     .taskOnce {
@@ -689,7 +689,7 @@ enum OrganizationCreatePresentation: Equatable {
 #Preview("Update Organization Form") {
   NavigationStack {
     OrganizationProfileFormView(organization: .mock)
-      .environment(Clerk.preview { preview in
+      .environmentObject(Clerk.preview { preview in
         var user = User.mock
         user.organizationMemberships = [.mockWithUserData]
 

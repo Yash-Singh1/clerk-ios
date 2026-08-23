@@ -9,11 +9,11 @@ import ClerkKit
 import SwiftUI
 
 struct SignUpCodeView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
-  @Environment(AuthNavigation.self) private var navigation
-  @Environment(AuthState.self) private var authState
-  @Environment(CodeLimiter.self) private var codeLimiter
+  @EnvironmentObject private var navigation: AuthNavigation
+  @EnvironmentObject private var authState: AuthState
+  @EnvironmentObject private var codeLimiter: CodeLimiter
 
   @State private var code = ""
   @State private var verificationState = CodeVerificationState.default

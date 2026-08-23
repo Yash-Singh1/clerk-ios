@@ -5,29 +5,28 @@
 #if os(iOS) || os(macOS)
 
 import ClerkKit
+import Combine
 import Foundation
-import Observation
 
 @MainActor
-@Observable
-final class OrganizationMembersDataSource {
+final class OrganizationMembersDataSource: ObservableObject {
   let pageSize: Int
 
-  var membershipsPager = OrganizationAccountListPager<OrganizationMembership>()
-  var invitationsPager = OrganizationAccountListPager<OrganizationInvitation>()
-  var membershipRequestsPager = OrganizationAccountListPager<OrganizationMembershipRequest>()
-  var isLoadingMembers = true
-  var isLoadingInvitations = true
-  var isLoadingMembershipRequests = true
-  var roles: [RoleResource] = []
-  var hasRoleSetMigration = false
-  var mutatingMembershipIds: Set<String> = []
-  var revokingInvitationIds: Set<String> = []
-  var acceptingMembershipRequestIds: Set<String> = []
-  var rejectingMembershipRequestIds: Set<String> = []
-  var membershipSearchText = ""
-  var membershipSearchQuery = ""
-  var error: Error?
+  @Published var membershipsPager = OrganizationAccountListPager<OrganizationMembership>()
+  @Published var invitationsPager = OrganizationAccountListPager<OrganizationInvitation>()
+  @Published var membershipRequestsPager = OrganizationAccountListPager<OrganizationMembershipRequest>()
+  @Published var isLoadingMembers = true
+  @Published var isLoadingInvitations = true
+  @Published var isLoadingMembershipRequests = true
+  @Published var roles: [RoleResource] = []
+  @Published var hasRoleSetMigration = false
+  @Published var mutatingMembershipIds: Set<String> = []
+  @Published var revokingInvitationIds: Set<String> = []
+  @Published var acceptingMembershipRequestIds: Set<String> = []
+  @Published var rejectingMembershipRequestIds: Set<String> = []
+  @Published var membershipSearchText = ""
+  @Published var membershipSearchQuery = ""
+  @Published var error: Error?
 
   init(pageSize: Int = 10) {
     self.pageSize = pageSize

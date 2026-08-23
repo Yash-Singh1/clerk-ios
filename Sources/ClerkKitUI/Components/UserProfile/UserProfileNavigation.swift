@@ -5,6 +5,7 @@
 
 #if os(iOS) || os(macOS)
 
+import Combine
 import Foundation
 import SwiftUI
 
@@ -13,19 +14,18 @@ import SwiftUI
 /// This class handles sheet presentation state for the user profile.
 /// It is injected into child views via the environment.
 @MainActor
-@Observable
-final class UserProfileSheetNavigation {
+final class UserProfileSheetNavigation: ObservableObject {
   /// Whether the account switcher sheet is presented.
-  var accountSwitcherIsPresented = false
+  @Published var accountSwitcherIsPresented = false
 
   /// Whether the auth view sheet is presented.
-  var authViewIsPresented = false
+  @Published var authViewIsPresented = false
 
   /// Whether the MFA type chooser sheet is presented.
-  var chooseMfaTypeIsPresented = false
+  @Published var chooseMfaTypeIsPresented = false
 
   /// The currently presented MFA add view type.
-  var presentedAddMfaType: UserProfileAddMfaView.PresentedView?
+  @Published var presentedAddMfaType: UserProfileAddMfaView.PresentedView?
 }
 
 /// Navigation API for navigating from custom rows to custom destinations inside
@@ -39,11 +39,10 @@ final class UserProfileSheetNavigation {
 /// Custom destination views can read this value using:
 ///
 /// ```swift
-/// @Environment(UserProfileNavigator<MyRoute>.self) private var navigation
+/// @EnvironmentObject private var navigation: UserProfileNavigator<MyRoute>
 /// ```
 @MainActor
-@Observable
-public final class UserProfileNavigator<Route: Hashable> {
+public final class UserProfileNavigator<Route: Hashable>: ObservableObject {
   private let pushRow: @MainActor (Route) -> Void
   private let popToRootAction: @MainActor () -> Void
 
@@ -79,8 +78,7 @@ enum UserProfileDismissAction {
 /// Internal built-in-only adapter for Clerk-owned child views that should not know about
 /// the host app's custom `Route` type but still need to trigger profile navigation.
 @MainActor
-@Observable
-final class UserProfileBuiltInRouter {
+final class UserProfileBuiltInRouter: ObservableObject {
   private let pushDestination: @MainActor (UserProfileBuiltInDestination) -> Void
   private let dismissAction: @MainActor (UserProfileDismissAction) -> Void
 

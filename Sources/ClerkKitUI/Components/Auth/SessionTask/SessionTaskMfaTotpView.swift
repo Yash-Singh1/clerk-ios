@@ -8,9 +8,9 @@ import ClerkKit
 import SwiftUI
 
 struct SessionTaskMfaTotpView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
-  @Environment(AuthNavigation.self) private var navigation
+  @EnvironmentObject private var navigation: AuthNavigation
 
   let totp: TOTPResource
   let token: AuthFlowPresentationToken

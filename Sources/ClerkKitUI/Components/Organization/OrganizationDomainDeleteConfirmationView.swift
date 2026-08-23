@@ -37,7 +37,7 @@ struct OrganizationDomainDeleteConfirmationView: View {
           if let error {
             ErrorText(error: error, alignment: .leading)
               .font(theme.fonts.subheadline)
-              .transition(.blurReplace.animation(.default))
+              .clerkBlurReplaceTransition(.default)
               .id(error.localizedDescription)
           }
 
@@ -74,7 +74,7 @@ struct OrganizationDomainDeleteConfirmationView: View {
     .frame(minWidth: 420, maxWidth: 520)
     #endif
     .background(theme.colors.background)
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
   }
 }
 

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct BackupCodesView: View {
   @Environment(\.clerkTheme) private var theme
-  @Environment(UserProfileSheetNavigation.self) private var navigation
+  @EnvironmentObject private var navigation: UserProfileSheetNavigation
   @Environment(\.dismiss) private var dismiss
 
   enum MfaType {
@@ -57,7 +57,7 @@ struct BackupCodesView: View {
     #if os(macOS)
     .frame(minWidth: 460, maxWidth: 620)
     #endif
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
     .background(theme.colors.background)
     #if os(iOS)
     .navigationBarTitleDisplayMode(.inline)
@@ -142,7 +142,7 @@ struct BackupCodesGrid: View {
     mfaType: .authenticatorApp
   )
   .clerkPreview()
-  .environment(UserProfileSheetNavigation())
+  .environmentObject(UserProfileSheetNavigation())
 }
 
 #endif

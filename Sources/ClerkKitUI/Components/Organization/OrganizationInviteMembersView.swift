@@ -8,7 +8,7 @@ import ClerkKit
 import SwiftUI
 
 struct OrganizationInviteMembersView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
 
@@ -54,7 +54,7 @@ struct OrganizationInviteMembersView: View {
         inviteMembersContent
       }
     }
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
     #if os(iOS)
     .navigationBarTitleDisplayMode(.inline)
     #endif
@@ -77,13 +77,13 @@ struct OrganizationInviteMembersView: View {
           .foregroundStyle(theme.colors.foreground)
       }
     }
-    .onChange(of: emailAddresses) { _, _ in
+    .clerkOnChange(of: emailAddresses) { _, _ in
       error = nil
     }
-    .onChange(of: selectedRoleKey) { _, _ in
+    .clerkOnChange(of: selectedRoleKey) { _, _ in
       error = nil
     }
-    .onChange(of: roleOptions.map(\.key), initial: true) { _, _ in
+    .clerkOnChange(of: roleOptions.map(\.key), initial: true) { _, _ in
       selectDefaultRoleIfNeeded()
     }
     .task(id: clerk.organization?.id) {
@@ -117,7 +117,7 @@ struct OrganizationInviteMembersView: View {
         if let error {
           ErrorText(error: error, alignment: .leading)
             .font(theme.fonts.subheadline)
-            .transition(.blurReplace.animation(.default))
+            .clerkBlurReplaceTransition(.default)
             .id(error.localizedDescription)
         }
 
@@ -334,7 +334,7 @@ private struct OrganizationInviteEmailAddressField: View {
     .onTapGesture {
       emailFieldIsFocused = true
     }
-    .onChange(of: emailAddressDraft) { _, newValue in
+    .clerkOnChange(of: emailAddressDraft) { _, newValue in
       handleEmailAddressDraftChange(newValue)
     }
   }

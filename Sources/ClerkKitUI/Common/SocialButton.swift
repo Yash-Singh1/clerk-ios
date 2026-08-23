@@ -10,7 +10,7 @@ import NukeUI
 import SwiftUI
 
 struct SocialButton: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.colorScheme) private var colorScheme
   @Environment(\.clerkTheme) private var theme
 
@@ -177,7 +177,7 @@ extension SocialButton {
     }
   }
   .padding()
-  .environment(Clerk.preview())
+  .environmentObject(Clerk.preview())
 }
 
 #endif

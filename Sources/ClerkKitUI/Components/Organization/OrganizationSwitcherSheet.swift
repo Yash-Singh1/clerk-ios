@@ -71,7 +71,7 @@ struct OrganizationSwitcherSheet: View {
         )
         #endif
       }
-      .scrollBounceBehavior(.basedOnSize)
+      .clerkScrollBounceBasedOnSize()
       #if os(iOS)
       .navigationBarTitleDisplayMode(.inline)
       #endif

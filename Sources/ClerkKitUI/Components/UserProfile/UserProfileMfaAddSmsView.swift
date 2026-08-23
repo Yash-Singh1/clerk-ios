@@ -10,10 +10,10 @@ import PhoneNumberKit
 import SwiftUI
 
 struct UserProfileMfaAddSmsView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
-  @Environment(UserProfileSheetNavigation.self) private var navigation
+  @EnvironmentObject private var navigation: UserProfileSheetNavigation
 
   @State private var selectedPhoneNumber: ClerkKit.PhoneNumber?
   @State private var addPhoneNumberIsPresented = false
@@ -128,9 +128,9 @@ struct UserProfileMfaAddSmsView: View {
     .frame(minWidth: 460, maxWidth: 620)
     #endif
     .background(theme.colors.background)
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
     #if os(iOS)
-    .sensoryFeedback(.selection, trigger: selectedPhoneNumber)
+    .clerkSensoryFeedback(.selection, trigger: selectedPhoneNumber)
     #endif
     .sheet(isPresented: $addPhoneNumberIsPresented) {
       UserProfileAddPhoneView()
@@ -202,7 +202,7 @@ struct AddMfaSmsRow: View {
         isSelected ? theme.colors.primary : theme.colors.inputBorder
       )
       .frame(width: 20, height: 20)
-      .contentTransition(.symbolEffect(.replace.offUp))
+      .clerkSymbolReplaceOffUpTransition()
   }
 
   var body: some View {
@@ -229,12 +229,14 @@ struct AddMfaSmsRow: View {
   }
 }
 
+@available(iOS 17.0, macOS 14.0, *)
 #Preview {
   UserProfileMfaAddSmsView()
     .clerkPreview()
     .environment(\.clerkTheme, .clerk)
 }
 
+@available(iOS 17.0, macOS 14.0, *)
 #Preview("Row") {
   @Previewable @State var selectedPhoneNumber: ClerkKit.PhoneNumber?
   let phoneNumbers: [ClerkKit.PhoneNumber] = [.mock, .mockMfa]

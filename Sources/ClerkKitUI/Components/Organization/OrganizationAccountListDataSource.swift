@@ -3,20 +3,19 @@
 //
 
 import ClerkKit
+import Combine
 import Foundation
-import Observation
 
 @MainActor
-@Observable
-final class OrganizationAccountListDataSource {
+final class OrganizationAccountListDataSource: ObservableObject {
   let pageSize: Int
 
-  var membershipsPager = OrganizationAccountListPager<OrganizationMembership>()
-  var invitationsPager = OrganizationAccountListPager<UserOrganizationInvitation>()
-  var suggestionsPager = OrganizationAccountListPager<OrganizationSuggestion>()
-  var creationDefaults: OrganizationCreationDefaults?
-  var isLoading = true
-  var error: Error?
+  @Published var membershipsPager = OrganizationAccountListPager<OrganizationMembership>()
+  @Published var invitationsPager = OrganizationAccountListPager<UserOrganizationInvitation>()
+  @Published var suggestionsPager = OrganizationAccountListPager<OrganizationSuggestion>()
+  @Published var creationDefaults: OrganizationCreationDefaults?
+  @Published var isLoading = true
+  @Published var error: Error?
 
   var hasExistingResources: Bool {
     !membershipsPager.items.isEmpty || !invitationsPager.items.isEmpty || !suggestionsPager.items.isEmpty

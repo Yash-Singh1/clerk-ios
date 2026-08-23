@@ -8,8 +8,8 @@ import ClerkKit
 import SwiftUI
 
 struct SessionTaskCreateOrganizationView: View {
-  @Environment(Clerk.self) private var clerk
-  @Environment(AuthNavigation.self) private var navigation
+  @EnvironmentObject private var clerk: Clerk
+  @EnvironmentObject private var navigation: AuthNavigation
 
   let creationDefaults: OrganizationCreationDefaults?
   let showBackButton: Bool

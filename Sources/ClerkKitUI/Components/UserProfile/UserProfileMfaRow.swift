@@ -9,10 +9,10 @@ import ClerkKit
 import SwiftUI
 
 struct UserProfileMfaRow: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.locale) private var locale
-  @Environment(UserProfileSheetNavigation.self) private var navigation
+  @EnvironmentObject private var navigation: UserProfileSheetNavigation
 
   @State private var isConfirmingRemoval = false
   @State private var removeResource: RemoveResource?
@@ -135,7 +135,7 @@ struct UserProfileMfaRow: View {
         .foregroundStyle(theme.colors.border)
     }
     .clerkErrorPresenting($error)
-    .onChange(of: removeResource) {
+    .clerkOnChange(of: removeResource) {
       if $1 != nil { isConfirmingRemoval = true }
     }
     .confirmationDialog(
@@ -161,7 +161,7 @@ struct UserProfileMfaRow: View {
     .sheet(item: $backupCodes) { backupCodes in
       NavigationStack {
         BackupCodesView(backupCodes: backupCodes.codes)
-          .environment(navigation)
+          .environmentObject(navigation)
       }
     }
   }

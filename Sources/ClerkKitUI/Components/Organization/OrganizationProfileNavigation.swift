@@ -4,14 +4,14 @@
 
 #if os(iOS) || os(macOS)
 
+import Combine
 import Foundation
 import SwiftUI
 
 /// Navigation API for navigating from custom rows to custom destinations inside
 /// `OrganizationProfileView`.
 @MainActor
-@Observable
-public final class OrganizationProfileNavigator<Route: Hashable> {
+public final class OrganizationProfileNavigator<Route: Hashable>: ObservableObject {
   private let pushRow: @MainActor (Route) -> Void
   private let popToRootAction: @MainActor () -> Void
 
@@ -47,8 +47,7 @@ enum OrganizationProfileDismissAction {
 /// Internal built-in-only adapter for Clerk-owned child views that should not know about
 /// the host app's custom `Route` type but still need to trigger profile navigation.
 @MainActor
-@Observable
-final class OrganizationProfileBuiltInRouter {
+final class OrganizationProfileBuiltInRouter: ObservableObject {
   private let pushDestination: @MainActor (OrganizationProfileBuiltInDestination) -> Void
   private let dismissAction: @MainActor (OrganizationProfileDismissAction) -> Void
 

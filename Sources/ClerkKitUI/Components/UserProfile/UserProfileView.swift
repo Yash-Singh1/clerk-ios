@@ -21,7 +21,7 @@ import SwiftUI
 ///
 /// ```swift
 /// struct ProfileView: View {
-///   @Environment(Clerk.self) private var clerk
+///   @EnvironmentObject private var clerk: Clerk
 ///
 ///   var body: some View {
 ///     Group {
@@ -98,7 +98,7 @@ import SwiftUI
 /// Custom destination views can access programmatic navigation through
 /// ``UserProfileNavigator`` when needed.
 public struct UserProfileView<Route: Hashable, Destination: View>: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
 
@@ -112,8 +112,8 @@ public struct UserProfileView<Route: Hashable, Destination: View>: View {
   @State private var accountSwitcherHeight: CGFloat = 400
   @State private var initialPathCount = 0
   @State private var internalPath = NavigationPath()
-  @State private var sheetNavigation = UserProfileSheetNavigation()
-  @State private var codeLimiter = CodeLimiter()
+  @StateObject private var sheetNavigation = UserProfileSheetNavigation()
+  @StateObject private var codeLimiter = CodeLimiter()
   @State private var error: Error?
 
   init(
@@ -163,15 +163,15 @@ public struct UserProfileView<Route: Hashable, Destination: View>: View {
             profileContent(user: user)
               .navigationDestination(for: Route.self) { route in
                 view(for: route)
-                  .environment(sheetNavigation)
-                  .environment(codeLimiter)
-                  .environment(
+                  .environmentObject(sheetNavigation)
+                  .environmentObject(codeLimiter)
+                  .environmentObject(
                     UserProfileNavigator(
                       push: navigateToCustom,
                       popToRoot: { dismissAction(.popToRoot) }
                     )
                   )
-                  .environment(
+                  .environmentObject(
                     UserProfileBuiltInRouter(
                       push: navigateToBuiltIn,
                       dismissAction: dismissAction
@@ -191,7 +191,7 @@ public struct UserProfileView<Route: Hashable, Destination: View>: View {
         }
       }
       .tint(theme.colors.primary)
-      .presentationBackground(theme.colors.background)
+      .clerkPresentationBackground(theme.colors.background)
       .background(theme.colors.background)
       .onFirstAppear {
         initialPathCount = navigationPath?.wrappedValue.count ?? 0
@@ -207,7 +207,7 @@ public struct UserProfileView<Route: Hashable, Destination: View>: View {
       }
       .sheet(isPresented: $updateProfileIsPresented) {
         UserProfileUpdateProfileView(user: user)
-          .environment(clerk)
+          .environmentObject(clerk)
       }
       .sheet(isPresented: $sheetNavigation.authViewIsPresented) {
         // The add-account sheet is modal over the host, so it dismisses itself
@@ -235,9 +235,9 @@ public struct UserProfileView<Route: Hashable, Destination: View>: View {
           )
         )
       }
-      .environment(sheetNavigation)
-      .environment(codeLimiter)
-      .environment(
+      .environmentObject(sheetNavigation)
+      .environmentObject(codeLimiter)
+      .environmentObject(
         UserProfileBuiltInRouter(
           push: navigateToBuiltIn,
           dismissAction: dismissAction
@@ -332,15 +332,15 @@ public struct UserProfileView<Route: Hashable, Destination: View>: View {
     .hostBackToolbar()
     .navigationDestination(for: UserProfileBuiltInDestination.self) { destination in
       view(for: destination)
-        .environment(sheetNavigation)
-        .environment(codeLimiter)
-        .environment(
+        .environmentObject(sheetNavigation)
+        .environmentObject(codeLimiter)
+        .environmentObject(
           UserProfileNavigator(
             push: navigateToCustom,
             popToRoot: { dismissAction(.popToRoot) }
           )
         )
-        .environment(
+        .environmentObject(
           UserProfileBuiltInRouter(
             push: navigateToBuiltIn,
             dismissAction: dismissAction
@@ -632,9 +632,10 @@ private enum UserProfileListRowID<Route: Hashable>: Hashable {
   case custom(route: Route, occurrence: Int)
 }
 
+@available(iOS 17.0, macOS 14.0, *)
 #Preview("Dismissible") {
   UserProfileView()
-    .environment(
+    .environmentObject(
       Clerk.preview { builder in
         builder.services.clientService.getHandler = {
           try? await Task.sleep(for: .seconds(1))
@@ -652,11 +653,12 @@ private enum UserProfileListRowID<Route: Hashable>: Hashable {
         }
       }
     )
-    .environment(AuthState())
-    .environment(UserProfileSheetNavigation())
+    .environmentObject(AuthState())
+    .environmentObject(UserProfileSheetNavigation())
     .environment(\.clerkTheme, .clerk)
 }
 
+@available(iOS 17.0, macOS 14.0, *)
 #Preview("With custom rows") {
   UserProfileView()
     .userProfileRows([
@@ -683,7 +685,7 @@ private enum UserProfileListRowID<Route: Hashable>: Hashable {
         EmptyView()
       }
     }
-    .environment(
+    .environmentObject(
       Clerk.preview { builder in
         builder.services.clientService.getHandler = {
           try? await Task.sleep(for: .seconds(1))
@@ -701,14 +703,15 @@ private enum UserProfileListRowID<Route: Hashable>: Hashable {
         }
       }
     )
-    .environment(AuthState())
-    .environment(UserProfileSheetNavigation())
+    .environmentObject(AuthState())
+    .environmentObject(UserProfileSheetNavigation())
     .environment(\.clerkTheme, .clerk)
 }
 
+@available(iOS 17.0, macOS 14.0, *)
 #Preview("Not dismissible") {
   UserProfileView(isDismissible: false)
-    .environment(
+    .environmentObject(
       Clerk.preview { builder in
         builder.services.clientService.getHandler = {
           try? await Task.sleep(for: .seconds(1))
@@ -726,16 +729,17 @@ private enum UserProfileListRowID<Route: Hashable>: Hashable {
         }
       }
     )
-    .environment(AuthState())
-    .environment(UserProfileSheetNavigation())
+    .environmentObject(AuthState())
+    .environmentObject(UserProfileSheetNavigation())
     .environment(\.clerkTheme, .clerk)
 }
 
+@available(iOS 17.0, macOS 14.0, *)
 #Preview("Embedded in parent NavigationStack") {
   @Previewable @State var navigationPath = NavigationPath()
 
   UserProfileView(isDismissible: false, navigationPath: $navigationPath)
-    .environment(
+    .environmentObject(
       Clerk.preview { builder in
         builder.services.clientService.getHandler = {
           try? await Task.sleep(for: .seconds(1))
@@ -753,8 +757,8 @@ private enum UserProfileListRowID<Route: Hashable>: Hashable {
         }
       }
     )
-    .environment(AuthState())
-    .environment(UserProfileSheetNavigation())
+    .environmentObject(AuthState())
+    .environmentObject(UserProfileSheetNavigation())
     .environment(\.clerkTheme, .clerk)
 }
 

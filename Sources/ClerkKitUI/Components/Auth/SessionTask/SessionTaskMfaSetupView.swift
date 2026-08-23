@@ -12,9 +12,9 @@ import SwiftUI
 /// This view is presented after sign-in/sign-up completes when the backend requires
 /// the user to enroll in at least one MFA method before the session can become active.
 struct SessionTaskMfaSetupView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
-  @Environment(AuthNavigation.self) private var navigation
+  @EnvironmentObject private var navigation: AuthNavigation
 
   @State private var error: Error?
 

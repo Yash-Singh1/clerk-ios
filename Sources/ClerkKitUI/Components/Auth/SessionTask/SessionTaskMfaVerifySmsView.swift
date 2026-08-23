@@ -8,11 +8,11 @@ import ClerkKit
 import SwiftUI
 
 struct SessionTaskMfaVerifySmsView: View {
-  @Environment(Clerk.self) private var clerk
-  @Environment(AuthNavigation.self) private var navigation
+  @EnvironmentObject private var clerk: Clerk
+  @EnvironmentObject private var navigation: AuthNavigation
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
-  @Environment(CodeLimiter.self) private var codeLimiter
+  @EnvironmentObject private var codeLimiter: CodeLimiter
 
   @State private var code = ""
   @State private var error: Error?

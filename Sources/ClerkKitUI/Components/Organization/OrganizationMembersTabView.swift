@@ -8,7 +8,7 @@ import ClerkKit
 import SwiftUI
 
 struct OrganizationMembersTabView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
 
   let dataSource: OrganizationMembersDataSource
@@ -65,7 +65,7 @@ struct OrganizationMembersTabView: View {
         )
       }
     }
-    .onChange(of: dataSource.membershipSearchText) { _, newValue in
+    .clerkOnChange(of: dataSource.membershipSearchText) { _, newValue in
       scheduleSearch(newValue)
     }
     .onDisappear {
@@ -87,7 +87,7 @@ struct OrganizationMembersTabView: View {
   }
 
   private var searchField: some View {
-    @Bindable var dataSource = dataSource
+    @ObservedObject var dataSource = dataSource
 
     return HStack(spacing: 8) {
       Image(systemName: "magnifyingglass")

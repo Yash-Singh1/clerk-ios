@@ -9,7 +9,7 @@ import SwiftUI
 
 struct OrganizationDomainVerifyCodeView: View {
   @Environment(\.clerkTheme) private var theme
-  @Environment(CodeLimiter.self) private var codeLimiter
+  @EnvironmentObject private var codeLimiter: CodeLimiter
 
   let emailAddress: String
   let onVerified: @MainActor () -> Void
@@ -100,7 +100,7 @@ struct OrganizationDomainVerifyCodeView: View {
       .padding(24)
     }
     .clerkErrorPresenting($error)
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
     .background(theme.colors.background)
     #if os(iOS)
     .navigationBarTitleDisplayMode(.inline)

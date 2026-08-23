@@ -8,7 +8,7 @@ import ClerkKit
 import SwiftUI
 
 struct OrganizationAccountListSections: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
 
   let accountList: OrganizationAccountListDataSource
   let mode: OrganizationAccountListMode

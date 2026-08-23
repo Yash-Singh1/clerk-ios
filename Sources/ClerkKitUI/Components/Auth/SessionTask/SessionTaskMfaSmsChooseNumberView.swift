@@ -8,10 +8,10 @@ import ClerkKit
 import SwiftUI
 
 struct SessionTaskMfaSmsChooseNumberView: View {
-  @Environment(Clerk.self) private var clerk
-  @Environment(AuthNavigation.self) private var navigation
+  @EnvironmentObject private var clerk: Clerk
+  @EnvironmentObject private var navigation: AuthNavigation
   @Environment(\.clerkTheme) private var theme
-  @Environment(CodeLimiter.self) private var codeLimiter
+  @EnvironmentObject private var codeLimiter: CodeLimiter
 
   @State private var error: Error?
   @State private var isSubmittingPhone = false
@@ -50,7 +50,7 @@ struct SessionTaskMfaSmsChooseNumberView: View {
     .toolbar {
       UserButtonToolbarItem(presentationContext: .sessionTaskToolbar)
     }
-    .onChange(of: navigation.path) { oldPath, newPath in
+    .clerkOnChange(of: navigation.path) { oldPath, newPath in
       if newPath.count > oldPath.count {
         didNavigateAway = true
       } else if newPath.count < oldPath.count, didNavigateAway {
@@ -82,7 +82,7 @@ struct SessionTaskMfaSmsChooseNumberView: View {
           }
         }
       }
-      .presentationBackground(theme.colors.background)
+      .clerkPresentationBackground(theme.colors.background)
       .tint(theme.colors.primary)
     }
   }
@@ -155,7 +155,7 @@ struct SessionTaskMfaSmsChooseNumberView: View {
       SecuredByClerkView()
     }
     .padding(16)
-    .sensoryFeedback(.selection, trigger: selectedPhoneNumber)
+    .clerkSensoryFeedback(.selection, trigger: selectedPhoneNumber)
   }
 
   private func continueWithPhoneNumber(_ phoneNumber: PhoneNumber) async {

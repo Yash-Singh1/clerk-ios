@@ -46,12 +46,12 @@ struct PreGlassDetentSheetBackgroundModifier: ViewModifier {
     } else {
       content
         .background(theme.colors.background)
-        .presentationBackground(theme.colors.background)
+        .clerkPresentationBackground(theme.colors.background)
     }
     #elseif os(macOS)
     content
       .background(theme.colors.background)
-      .presentationBackground(theme.colors.background)
+      .clerkPresentationBackground(theme.colors.background)
     #endif
   }
 }

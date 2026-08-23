@@ -5,6 +5,7 @@
 
 #if os(iOS) || os(macOS)
 
+import Combine
 import Foundation
 
 /// Tracks when verification codes were last sent to prevent excessive requests.
@@ -12,17 +13,16 @@ import Foundation
 /// This class is used by both auth and user profile flows to manage code rate limiting.
 /// It is injected into child views via the environment and drives countdown UI via observation.
 @MainActor
-@Observable
-final class CodeLimiter {
+final class CodeLimiter: ObservableObject {
   /// The default cooldown period between code requests (in seconds).
   static let defaultCooldown: TimeInterval = 30
 
   /// Tracks when the last code was sent for each identifier.
-  private(set) var lastCodeSentAt: [String: Date] = [:]
+  @Published private(set) var lastCodeSentAt: [String: Date] = [:]
 
   /// A tick counter that increments every second while any cooldown is active.
   /// Views that access `remainingCooldown(for:)` will re-render when this changes.
-  private(set) var tick: UInt = 0
+  @Published private(set) var tick: UInt = 0
 
   /// The timer that drives the tick updates.
   private var timer: Timer?

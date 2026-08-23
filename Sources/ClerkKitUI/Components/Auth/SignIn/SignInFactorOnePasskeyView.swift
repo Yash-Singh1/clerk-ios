@@ -9,10 +9,10 @@ import ClerkKit
 import SwiftUI
 
 struct SignInFactorOnePasskeyView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
-  @Environment(AuthNavigation.self) private var navigation
-  @Environment(AuthState.self) private var authState
+  @EnvironmentObject private var navigation: AuthNavigation
+  @EnvironmentObject private var authState: AuthState
   @Environment(\.authFlowRequestOwnerId) private var authFlowRequestOwnerId
 
   @State private var passkeyInProgress = true
@@ -48,11 +48,7 @@ struct SignInFactorOnePasskeyView: View {
           Image(systemName: "faceid")
             .resizable()
             .symbolRenderingMode(.palette)
-            .symbolEffect(
-              .bounce.down,
-              options: .nonRepeating,
-              value: animateSymbol
-            )
+            .clerkPasskeyBounce(value: animateSymbol)
             .foregroundStyle(theme.colors.foreground, theme.colors.primary)
             .scaledToFit()
             .frame(width: 64, height: 64)

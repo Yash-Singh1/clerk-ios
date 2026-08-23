@@ -9,7 +9,7 @@ import ClerkKit
 import SwiftUI
 
 struct UserProfileAddConnectedAccountView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkUserProfileOAuthConfig) private var oauthConfig
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
@@ -77,7 +77,7 @@ struct UserProfileAddConnectedAccountView: View {
         }
         #endif
       }
-      .scrollBounceBehavior(.basedOnSize)
+      .clerkScrollBounceBasedOnSize()
       .background(theme.colors.background)
       .toolbar {
         CancelToolbarItem {
@@ -124,7 +124,7 @@ extension UserProfileAddConnectedAccountView {
   #if os(iOS)
   .clerkPreview()
   #elseif os(macOS)
-  .environment(Clerk.preview())
+  .environmentObject(Clerk.preview())
   #endif
   .environment(\.clerkTheme, .clerk)
 }

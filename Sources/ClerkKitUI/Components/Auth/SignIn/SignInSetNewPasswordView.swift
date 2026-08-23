@@ -12,10 +12,10 @@ struct SignInSetNewPasswordView: View {
   let mode: Mode
   let token: AuthFlowPresentationToken?
 
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
-  @Environment(AuthNavigation.self) private var navigation
-  @Environment(AuthState.self) private var authState
+  @EnvironmentObject private var navigation: AuthNavigation
+  @EnvironmentObject private var authState: AuthState
 
   @State private var identifier = ""
   @State private var signOutOfOtherDevices = false
@@ -48,7 +48,7 @@ struct SignInSetNewPasswordView: View {
   }
 
   var body: some View {
-    @Bindable var authState = authState
+    @ObservedObject var authState = authState
 
     ScrollView {
       VStack(spacing: 0) {
@@ -101,7 +101,7 @@ struct SignInSetNewPasswordView: View {
             if let fieldError {
               ErrorText(error: fieldError, alignment: .leading)
                 .font(theme.fonts.subheadline)
-                .transition(.blurReplace.animation(.default.speed(2)))
+                .clerkBlurReplaceTransition(.default.speed(2))
                 .id(fieldError.localizedDescription)
             }
           }
@@ -140,7 +140,7 @@ struct SignInSetNewPasswordView: View {
       .padding(16)
     }
     .background(theme.colors.background)
-    .sensoryFeedback(.error, trigger: fieldError?.localizedDescription) {
+    .clerkSensoryFeedback(.error, trigger: fieldError?.localizedDescription) {
       $1 != nil
     }
     .navigationBarBackButtonHidden()

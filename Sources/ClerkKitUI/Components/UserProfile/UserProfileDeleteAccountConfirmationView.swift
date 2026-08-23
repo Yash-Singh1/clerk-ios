@@ -9,11 +9,11 @@ import ClerkKit
 import SwiftUI
 
 struct UserProfileDeleteAccountConfirmationView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
-  @Environment(UserProfileSheetNavigation.self) private var navigation
-  @Environment(UserProfileBuiltInRouter.self) private var builtInRouter
+  @EnvironmentObject private var navigation: UserProfileSheetNavigation
+  @EnvironmentObject private var builtInRouter: UserProfileBuiltInRouter
 
   @State private var deleteAccount = ""
   @State private var error: Error?
@@ -55,7 +55,7 @@ struct UserProfileDeleteAccountConfirmationView: View {
             if let error {
               ErrorText(error: error, alignment: .leading)
                 .font(theme.fonts.subheadline)
-                .transition(.blurReplace.animation(.default))
+                .clerkBlurReplaceTransition(.default)
                 .id(error.localizedDescription)
             }
           }
@@ -95,7 +95,7 @@ struct UserProfileDeleteAccountConfirmationView: View {
     .frame(minWidth: 420, maxWidth: 520)
     #endif
     .background(theme.colors.background)
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
   }
 }
 
@@ -134,8 +134,8 @@ extension UserProfileDeleteAccountConfirmationView {
 
 #Preview {
   UserProfileDeleteAccountConfirmationView()
-    .environment(UserProfileSheetNavigation())
-    .environment(
+    .environmentObject(UserProfileSheetNavigation())
+    .environmentObject(
       UserProfileBuiltInRouter(
         push: { _ in },
         dismissAction: { _ in }

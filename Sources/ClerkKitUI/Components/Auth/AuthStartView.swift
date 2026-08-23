@@ -13,10 +13,10 @@ import SwiftUI
 struct AuthStartView: View {
   // MARK: - Environment
 
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
-  @Environment(AuthNavigation.self) private var navigation
-  @Environment(AuthState.self) private var authState
+  @EnvironmentObject private var navigation: AuthNavigation
+  @EnvironmentObject private var authState: AuthState
   @Environment(\.authFlowRequestOwnerId) private var authFlowRequestOwnerId
   @Environment(\.dismissKeyboard) private var dismissKeyboard
 
@@ -235,7 +235,7 @@ struct AuthStartView: View {
   // MARK: - Body
 
   var body: some View {
-    @Bindable var authState = authState
+    @ObservedObject var authState = authState
 
     ScrollView {
       VStack(spacing: 0) {
@@ -273,7 +273,7 @@ struct AuthStartView: View {
     #endif
     .clerkErrorPresenting($generalError)
     .background(theme.colors.background)
-    .sensoryFeedback(.error, trigger: fieldError?.localizedDescription) {
+    .clerkSensoryFeedback(.error, trigger: fieldError?.localizedDescription) {
       $1 != nil
     }
     .onFirstAppear {
@@ -304,7 +304,7 @@ struct AuthStartView: View {
         automaticPasskeySignInTask = nil
       }
     }
-    .onChange(of: clerk.environmentRefreshCheckpoint) { _, _ in
+    .clerkOnChange(of: clerk.environmentRefreshCheckpoint) { _, _ in
       restartAutomaticPasskeySignInAfterEnvironmentRefreshIfNeeded()
     }
     #endif
@@ -384,7 +384,7 @@ extension AuthStartView {
 
   @ViewBuilder
   private var identifierField: some View {
-    @Bindable var authState = authState
+    @ObservedObject var authState = authState
 
     if phoneNumberInputIsActive {
       ClerkPhoneNumberField(
@@ -394,7 +394,7 @@ extension AuthStartView {
         isEnabled: !authState.authStartPhoneNumberIsLocked,
         accessibilityIdentifier: ClerkAccessibilityIdentifiers.Auth.Start.phoneNumber
       )
-      .transition(.blurReplace)
+      .clerkBlurReplaceTransition()
       .lastUsedAuthBadgeOverlay(lastUsedAuth?.showsPhoneBadge ?? false)
     } else {
       VStack {
@@ -413,7 +413,7 @@ extension AuthStartView {
         #endif
         .lastUsedAuthBadgeOverlay(lastUsedAuth?.showsEmailUsernameBadge ?? false)
       }
-      .transition(.blurReplace)
+      .clerkBlurReplaceTransition()
     }
   }
 
@@ -422,13 +422,13 @@ extension AuthStartView {
     if let fieldError {
       ErrorText(error: fieldError, alignment: .leading)
         .font(theme.fonts.subheadline)
-        .transition(.blurReplace.animation(.default.speed(2)))
+        .clerkBlurReplaceTransition(.default.speed(2))
         .id(fieldError.localizedDescription)
     }
   }
 
   private var continueButton: some View {
-    @Bindable var authState = authState
+    @ObservedObject var authState = authState
 
     return AsyncButton {
       await startAuth()

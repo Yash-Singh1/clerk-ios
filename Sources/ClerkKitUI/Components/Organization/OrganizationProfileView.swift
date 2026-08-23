@@ -84,7 +84,7 @@ import SwiftUI
 ///   }
 /// ```
 public struct OrganizationProfileView<Route: Hashable, Destination: View>: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
 
@@ -184,13 +184,13 @@ public struct OrganizationProfileView<Route: Hashable, Destination: View>: View 
               profileContent(organization: organization)
                 .navigationDestination(for: Route.self) { route in
                   view(for: route)
-                    .environment(
+                    .environmentObject(
                       OrganizationProfileNavigator(
                         push: navigateToCustom,
                         popToRoot: { dismissAction(.popToRoot) }
                       )
                     )
-                    .environment(
+                    .environmentObject(
                       OrganizationProfileBuiltInRouter(
                         push: navigateToBuiltIn,
                         dismissAction: dismissAction
@@ -210,7 +210,7 @@ public struct OrganizationProfileView<Route: Hashable, Destination: View>: View 
           }
         }
         .tint(theme.colors.primary)
-        .presentationBackground(theme.colors.background)
+        .clerkPresentationBackground(theme.colors.background)
         .background(theme.colors.background)
         .onFirstAppear {
           initialPathCount = navigationPath?.wrappedValue.count ?? 0
@@ -230,7 +230,7 @@ public struct OrganizationProfileView<Route: Hashable, Destination: View>: View 
         .task {
           _ = try? await clerk.refreshClient()
         }
-        .environment(
+        .environmentObject(
           OrganizationProfileBuiltInRouter(
             push: navigateToBuiltIn,
             dismissAction: dismissAction
@@ -283,13 +283,13 @@ public struct OrganizationProfileView<Route: Hashable, Destination: View>: View 
     }
     .navigationDestination(for: OrganizationProfileBuiltInDestination.self) { destination in
       view(for: destination)
-        .environment(
+        .environmentObject(
           OrganizationProfileNavigator(
             push: navigateToCustom,
             popToRoot: { dismissAction(.popToRoot) }
           )
         )
-        .environment(
+        .environmentObject(
           OrganizationProfileBuiltInRouter(
             push: navigateToBuiltIn,
             dismissAction: dismissAction
@@ -562,7 +562,7 @@ private enum OrganizationProfileListRowID<Route: Hashable>: Hashable {
 
 #Preview("Organization Profile") {
   OrganizationProfileView()
-    .environment(Clerk.preview { preview in
+    .environmentObject(Clerk.preview { preview in
       var membership = OrganizationMembership.mockWithUserData
       membership.permissions = [
         OrganizationSystemPermission.manageProfile.rawValue,

@@ -8,14 +8,14 @@ import ClerkKit
 import SwiftUI
 
 struct OrganizationAddDomainView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
 
   let onDomainChanged: @MainActor () -> Void
 
   @State private var path: [Destination] = []
-  @State private var codeLimiter = CodeLimiter()
+  @StateObject private var codeLimiter = CodeLimiter()
   @State private var domainName = ""
   @State private var error: Error?
 
@@ -62,7 +62,7 @@ struct OrganizationAddDomainView: View {
           if let error {
             ErrorText(error: error, alignment: .leading)
               .font(theme.fonts.subheadline)
-              .transition(.blurReplace.animation(.default))
+              .clerkBlurReplaceTransition(.default)
               .id(error.localizedDescription)
           }
 
@@ -80,7 +80,7 @@ struct OrganizationAddDomainView: View {
         }
         .padding(24)
       }
-      .presentationBackground(theme.colors.background)
+      .clerkPresentationBackground(theme.colors.background)
       #if os(iOS)
       .navigationBarTitleDisplayMode(.inline)
       #endif
@@ -113,11 +113,11 @@ struct OrganizationAddDomainView: View {
         }
       }
     }
-    .environment(codeLimiter)
+    .environmentObject(codeLimiter)
     #if os(macOS)
     .frame(minWidth: 420, maxWidth: 520)
     #endif
-    .onChange(of: domainName) { _, _ in
+    .clerkOnChange(of: domainName) { _, _ in
       error = nil
     }
   }

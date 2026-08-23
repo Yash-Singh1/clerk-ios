@@ -1,8 +1,8 @@
 @testable import ClerkKit
+import Combine
 import ConcurrencyExtras
 import Foundation
 import Mocker
-import Observation
 import Security
 import Testing
 
@@ -2456,11 +2456,10 @@ struct ClerkTests {
     let registration = try #require(clerk.registerAuthFlow())
     clerk.client = .mock
     let didChange = LockIsolated(false)
-    let initialValue = withObservationTracking {
-      clerk.isAuthFlowComplete
-    } onChange: {
+    let observation = clerk.objectWillChange.sink {
       didChange.setValue(true)
     }
+    let initialValue = clerk.isAuthFlowComplete
 
     clerk.setClientFromIdentityController(
       .mock,
@@ -2473,6 +2472,7 @@ struct ClerkTests {
     #expect(initialValue)
     #expect(didChange.value)
     #expect(clerk.isAuthFlowComplete == false)
+    withExtendedLifetime(observation) {}
     withExtendedLifetime(registration) {}
   }
 

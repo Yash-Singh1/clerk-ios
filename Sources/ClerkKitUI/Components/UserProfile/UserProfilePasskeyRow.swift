@@ -96,7 +96,7 @@ struct UserProfilePasskeyRow: View {
         }
       }
     )
-    .onChange(of: removeResource) {
+    .clerkOnChange(of: removeResource) {
       if $1 != nil { isConfirmingRemoval = true }
     }
     .animation(.default, value: isLoading)

@@ -9,7 +9,7 @@ import ClerkKit
 import SwiftUI
 
 struct UserProfileAddPhoneView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
 
@@ -66,7 +66,7 @@ struct UserProfileAddPhoneView: View {
             if let error {
               ErrorText(error: error, alignment: .leading)
                 .font(theme.fonts.subheadline)
-                .transition(.blurReplace.animation(.default))
+                .clerkBlurReplaceTransition(.default)
                 .id(error.localizedDescription)
             }
           }
@@ -90,7 +90,7 @@ struct UserProfileAddPhoneView: View {
         }
         .padding(24)
       }
-      .presentationBackground(theme.colors.background)
+      .clerkPresentationBackground(theme.colors.background)
       #if os(iOS)
       .navigationBarTitleDisplayMode(.inline)
       #endif

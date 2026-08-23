@@ -8,11 +8,11 @@ import ClerkKit
 import SwiftUI
 
 struct OrganizationMembersView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
 
   @State private var selectedTab: OrganizationMembersTab = .members
-  @State private var dataSource = OrganizationMembersDataSource()
+  @StateObject private var dataSource = OrganizationMembersDataSource()
   @State private var inviteMembersIsPresented = false
 
   private var organization: Organization? {
@@ -69,7 +69,7 @@ struct OrganizationMembersView: View {
   }
 
   var body: some View {
-    @Bindable var dataSource = dataSource
+    @ObservedObject var dataSource = dataSource
 
     VStack(spacing: 0) {
       if availableTabs.count > 1 {
@@ -117,7 +117,7 @@ struct OrganizationMembersView: View {
     .task(id: organization?.id) {
       await loadInitialData()
     }
-    .onChange(of: availableTabs) {
+    .clerkOnChange(of: availableTabs) {
       normalizeSelectedTab()
     }
     #if os(macOS)
@@ -205,7 +205,7 @@ private enum OrganizationMembersTab: Hashable, Identifiable {
 #Preview("Organization Members") {
   NavigationStack {
     OrganizationMembersView()
-      .environment(Clerk.preview { preview in
+      .environmentObject(Clerk.preview { preview in
         let organization = Organization.mock
         var membership = OrganizationMembership.mockWithUserData
         membership.organization = organization

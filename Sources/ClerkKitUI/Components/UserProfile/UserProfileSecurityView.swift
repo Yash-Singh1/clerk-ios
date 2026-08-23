@@ -9,9 +9,9 @@ import ClerkKit
 import SwiftUI
 
 struct UserProfileSecurityView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
-  @Environment(UserProfileSheetNavigation.self) private var navigation
+  @EnvironmentObject private var navigation: UserProfileSheetNavigation
   @State private var error: Error?
 
   @State private var trustedDeviceAvailability: TrustedDeviceAvailability?
@@ -76,7 +76,7 @@ struct UserProfileSecurityView: View {
   }
 
   var body: some View {
-    @Bindable var navigation = navigation
+    @ObservedObject var navigation = navigation
 
     Group {
       if let user {
@@ -128,7 +128,7 @@ struct UserProfileSecurityView: View {
           .foregroundStyle(theme.colors.foreground)
       }
     }
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
     .background(theme.colors.background)
     .clerkErrorPresenting($error)
     .task {
@@ -195,7 +195,7 @@ extension UserProfileSecurityView {
     UserProfileSecurityView()
   }
   .clerkPreview()
-  .environment(UserProfileSheetNavigation())
+  .environmentObject(UserProfileSheetNavigation())
   .environment(\.clerkTheme, .clerk)
 }
 

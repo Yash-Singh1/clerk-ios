@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 
 struct UserProfilePasswordSection: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
 
   enum PasswordAction: Hashable, Identifiable {

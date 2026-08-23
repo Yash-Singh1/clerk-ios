@@ -9,7 +9,7 @@ import ClerkKit
 import SwiftUI
 
 struct UserProfileChangePasswordView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
 
@@ -61,7 +61,7 @@ struct UserProfileChangePasswordView: View {
     #if os(macOS)
     .frame(minWidth: 420, maxWidth: 520)
     #endif
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
     .background(theme.colors.background)
   }
 

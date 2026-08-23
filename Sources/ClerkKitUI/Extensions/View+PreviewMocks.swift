@@ -14,12 +14,11 @@ extension View {
   /// Injects mock environment values for previews.
   ///
   /// This modifier injects mock versions of all Clerk environment observables:
-  /// - `Clerk.mock` for `@Environment(Clerk.self)`
-  /// - `AuthState()` for `@Environment(AuthState.self)`
-  /// - `AuthNavigation()` for `@Environment(AuthNavigation.self)`
-  /// - `CodeLimiter()` for `@Environment(CodeLimiter.self)`
-  /// - `UserProfileSheetNavigation()` for `@Environment(UserProfileSheetNavigation.self)`
-  /// - `OrganizationSheetNavigation()` for `@Environment(OrganizationSheetNavigation.self)`
+  /// - `Clerk.mock` for `@EnvironmentObject var clerk: Clerk`
+  /// - `AuthState()` for `@EnvironmentObject var authState: AuthState`
+  /// - `AuthNavigation()` for `@EnvironmentObject var navigation: AuthNavigation`
+  /// - `CodeLimiter()` for `@EnvironmentObject var codeLimiter: CodeLimiter`
+  /// - `UserProfileSheetNavigation()` for `@EnvironmentObject var navigation: UserProfileSheetNavigation`
   ///
   /// Note: `ClerkTheme` has a default value and doesn't need to be injected.
   ///
@@ -42,11 +41,11 @@ extension View {
       }
 
       return AnyView(
-        environment(clerk)
-          .environment(CodeLimiter())
-          .environment(UserProfileSheetNavigation())
-          .environment(AuthState())
-          .environment(AuthNavigation())
+        environmentObject(clerk)
+          .environmentObject(CodeLimiter())
+          .environmentObject(UserProfileSheetNavigation())
+          .environmentObject(AuthState())
+          .environmentObject(AuthNavigation())
       )
     }
     return AnyView(self)

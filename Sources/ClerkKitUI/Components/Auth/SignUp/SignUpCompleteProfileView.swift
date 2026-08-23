@@ -9,10 +9,10 @@ import ClerkKit
 import SwiftUI
 
 struct SignUpCompleteProfileView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
-  @Environment(AuthNavigation.self) private var navigation
-  @Environment(AuthState.self) private var authState
+  @EnvironmentObject private var navigation: AuthNavigation
+  @EnvironmentObject private var authState: AuthState
 
   @State private var error: Error?
   @State private var safariSheetItem: SafariSheetItem?
@@ -53,7 +53,7 @@ struct SignUpCompleteProfileView: View {
   }
 
   var body: some View {
-    @Bindable var authState = authState
+    @ObservedObject var authState = authState
 
     ScrollView {
       VStack(spacing: 32) {
@@ -75,7 +75,7 @@ struct SignUpCompleteProfileView: View {
                 .textContentType(.givenName)
                 .focused($focused, equals: .firstName)
                 .submitLabel(submitLabelFor(.firstName))
-                .onChange(of: authState.signUpFirstName) {
+                .clerkOnChange(of: authState.signUpFirstName) {
                   updateFocusIfNeeded()
                 }
               }
@@ -89,7 +89,7 @@ struct SignUpCompleteProfileView: View {
                 .textContentType(.familyName)
                 .focused($focused, equals: .lastName)
                 .submitLabel(submitLabelFor(.lastName))
-                .onChange(of: authState.signUpLastName) {
+                .clerkOnChange(of: authState.signUpLastName) {
                   updateFocusIfNeeded()
                 }
               }
@@ -251,7 +251,7 @@ extension SignUpCompleteProfileView {
 #Preview {
   SignUpCompleteProfileView()
     .clerkPreview()
-    .environment(Clerk.preview { preview in
+    .environmentObject(Clerk.preview { preview in
       var client = Client.mock
       var signUp = SignUp.mock
       signUp.missingFields.append(contentsOf: [

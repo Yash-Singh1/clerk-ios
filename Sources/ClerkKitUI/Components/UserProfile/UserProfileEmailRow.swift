@@ -9,7 +9,7 @@ import ClerkKit
 import SwiftUI
 
 struct UserProfileEmailRow: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.locale) private var locale
 
@@ -113,7 +113,7 @@ struct UserProfileEmailRow: View {
     .sheet(item: $addEmailAddressDestination) {
       UserProfileAddEmailView(desintation: $0)
     }
-    .onChange(of: removeResource) {
+    .clerkOnChange(of: removeResource) {
       if $1 != nil { isConfirmingRemoval = true }
     }
     .confirmationDialog(

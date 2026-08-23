@@ -9,7 +9,7 @@ import ClerkKit
 import SwiftUI
 
 struct SecuredByClerkView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
 
   var body: some View {
@@ -20,7 +20,7 @@ struct SecuredByClerkView: View {
       }
       .font(theme.fonts.footnote.weight(.medium))
       .foregroundStyle(theme.colors.mutedForeground)
-      .transition(.blurReplace.animation(.default))
+      .clerkBlurReplaceTransition(.default)
     } else {
       EmptyView()
     }
@@ -28,7 +28,7 @@ struct SecuredByClerkView: View {
 }
 
 struct SecuredByClerkFooter: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
 
   private let showBackground: Bool
@@ -121,7 +121,7 @@ extension View {
 }
 
 private struct SecuredByClerkFooterModifier: ViewModifier {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
 
   private let macOSDismissAction: (() -> Void)?
 
@@ -158,17 +158,19 @@ extension Clerk {
   }
 }
 
+@available(iOS 17.0, macOS 14.0, *)
 #Preview {
   SecuredByClerkView()
 }
 
+@available(iOS 17.0, macOS 14.0, *)
 #Preview {
   @Previewable @Environment(\.clerkTheme) var theme
 
   VStack(spacing: 0) {
     ScrollView {
       theme.colors.muted
-        .containerRelativeFrame(.vertical)
+        .clerkContainerRelativeFrame(.vertical)
     }
     SecuredByClerkFooter()
   }

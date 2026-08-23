@@ -52,7 +52,7 @@ import SwiftUI
 /// }
 /// ```
 public struct OrganizationSwitcher<Route: Hashable, LabelContent: View, Destination: View>: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
 
   private let hidePersonal: Bool
@@ -177,12 +177,12 @@ public struct OrganizationSwitcher<Route: Hashable, LabelContent: View, Destinat
     .sheet(item: $presentedSheet) { sheet in
       view(for: sheet)
     }
-    .onChange(of: user?.id) { _, userId in
+    .clerkOnChange(of: user?.id) { _, userId in
       if userId == nil {
         presentedSheet = nil
       }
     }
-    .onChange(of: activeOrganization?.id) { _, organizationId in
+    .clerkOnChange(of: activeOrganization?.id) { _, organizationId in
       guard organizationId == nil else { return }
 
       switch presentedSheet {

@@ -9,9 +9,9 @@ import ClerkKit
 import SwiftUI
 
 struct UserProfileMfaSection: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
-  @Environment(UserProfileSheetNavigation.self) private var navigation
+  @EnvironmentObject private var navigation: UserProfileSheetNavigation
 
   @State private var addMfaHeight: CGFloat = 400
 
@@ -36,7 +36,7 @@ struct UserProfileMfaSection: View {
   }
 
   var body: some View {
-    @Bindable var navigation = navigation
+    @ObservedObject var navigation = navigation
 
     Section {
       VStack(spacing: 0) {

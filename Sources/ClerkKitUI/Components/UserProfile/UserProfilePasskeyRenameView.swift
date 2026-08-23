@@ -42,7 +42,7 @@ struct UserProfilePasskeyRenameView: View {
             if let error {
               ErrorText(error: error, alignment: .leading)
                 .font(theme.fonts.subheadline)
-                .transition(.blurReplace.animation(.default))
+                .clerkBlurReplaceTransition(.default)
                 .id(error.localizedDescription)
             }
           }
@@ -79,7 +79,7 @@ struct UserProfilePasskeyRenameView: View {
     #if os(macOS)
     .frame(minWidth: 420, maxWidth: 520)
     #endif
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
     .background(theme.colors.background)
   }
 }

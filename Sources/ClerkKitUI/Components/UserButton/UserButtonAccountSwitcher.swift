@@ -9,9 +9,9 @@ import ClerkKit
 import SwiftUI
 
 struct UserButtonAccountSwitcher: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
-  @Environment(UserProfileSheetNavigation.self) private var navigation
+  @EnvironmentObject private var navigation: UserProfileSheetNavigation
   @Environment(\.dismiss) private var dismiss
 
   @Binding private var contentHeight: CGFloat
@@ -194,7 +194,7 @@ extension UserButtonAccountSwitcher {
 #Preview {
   UserButtonAccountSwitcher()
     .clerkPreview()
-    .environment(UserProfileSheetNavigation())
+    .environmentObject(UserProfileSheetNavigation())
     .environment(\.clerkTheme, .clerk)
 }
 

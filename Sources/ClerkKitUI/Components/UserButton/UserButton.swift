@@ -52,7 +52,7 @@ import SwiftUI
 /// }
 /// ```
 public struct UserButton<Route: Hashable, SignedOutContent: View, Destination: View>: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
 
   @State private var presentedSheet: PresentedSheet?
@@ -176,7 +176,7 @@ public struct UserButton<Route: Hashable, SignedOutContent: View, Destination: V
           .contentSizingDetent()
       }
     }
-    .onChange(of: clerk.user) { _, newValue in
+    .clerkOnChange(of: clerk.user) { _, newValue in
       guard newValue == nil else { return }
       guard presentedSheet != .sessionTaskAuth else { return }
       presentedSheet = nil

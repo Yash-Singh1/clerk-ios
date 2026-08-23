@@ -8,7 +8,7 @@ import ClerkKit
 import SwiftUI
 
 struct OrganizationInvitationsTabView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
 
   let dataSource: OrganizationMembersDataSource
 

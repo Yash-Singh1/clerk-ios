@@ -7,7 +7,7 @@ let package = Package(
   name: "Clerk",
   defaultLocalization: "en",
   platforms: [
-    .iOS(.v17),
+    .iOS(.v16),
     .macCatalyst(.v17),
     .macOS(.v14),
     .watchOS(.v10),

@@ -57,7 +57,7 @@ struct OrganizationAccountPaginatedList<Item: Identifiable & Codable & Sendable,
         } else if pager.items.isEmpty, let emptyState {
           emptyState()
             .frame(maxWidth: .infinity)
-            .containerRelativeFrame(.vertical, count: 5, span: 4, spacing: 0)
+            .clerkContainerRelativeFrame(.vertical, count: 5, span: 4, spacing: 0)
         } else if !pager.items.isEmpty {
           Divider()
 

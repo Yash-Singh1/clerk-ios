@@ -8,7 +8,7 @@ import ClerkKit
 import SwiftUI
 
 struct OrganizationDomainEnrollmentModeView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
 
@@ -72,7 +72,7 @@ struct OrganizationDomainEnrollmentModeView: View {
           if let error {
             ErrorText(error: error, alignment: .leading)
               .font(theme.fonts.subheadline)
-              .transition(.blurReplace.animation(.default))
+              .clerkBlurReplaceTransition(.default)
               .id(error.localizedDescription)
           }
 
@@ -110,16 +110,16 @@ struct OrganizationDomainEnrollmentModeView: View {
     #if os(macOS)
     .frame(minWidth: 420, maxWidth: 520)
     #endif
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
     .background(theme.colors.background)
-    .onChange(of: selectedMode) { _, selectedMode in
+    .clerkOnChange(of: selectedMode) { _, selectedMode in
       if selectedMode != .manualInvitation {
         deletePending = false
       }
 
       error = nil
     }
-    .onChange(of: deletePending) { _, _ in
+    .clerkOnChange(of: deletePending) { _, _ in
       error = nil
     }
   }
@@ -249,7 +249,7 @@ private struct OrganizationDomainEnrollmentModeOption: Identifiable {
       return domain
     }()
   ) {}
-    .environment(
+    .environmentObject(
       Clerk.preview { preview in
         var environment = Clerk.Environment.mock
         environment.organizationSettings.domains.enrollmentModes = [

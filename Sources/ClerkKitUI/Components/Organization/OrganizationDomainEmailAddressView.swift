@@ -47,7 +47,7 @@ struct OrganizationDomainEmailAddressView: View {
           if let error {
             ErrorText(error: error, alignment: .leading)
               .font(theme.fonts.subheadline)
-              .transition(.blurReplace.animation(.default))
+              .clerkBlurReplaceTransition(.default)
               .id(error.localizedDescription)
           }
         }
@@ -66,7 +66,7 @@ struct OrganizationDomainEmailAddressView: View {
       }
       .padding(24)
     }
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
     #if os(iOS)
     .navigationBarTitleDisplayMode(.inline)
     #endif
@@ -78,7 +78,7 @@ struct OrganizationDomainEmailAddressView: View {
           .foregroundStyle(theme.colors.foreground)
       }
     }
-    .onChange(of: emailLocalPart) { _, newValue in
+    .clerkOnChange(of: emailLocalPart) { _, newValue in
       error = nil
 
       if let atIndex = newValue.firstIndex(of: "@") {

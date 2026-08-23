@@ -8,10 +8,10 @@ import ClerkKit
 import SwiftUI
 
 struct OrganizationProfileActionConfirmationView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
-  @Environment(OrganizationProfileBuiltInRouter.self) private var builtInRouter
+  @EnvironmentObject private var builtInRouter: OrganizationProfileBuiltInRouter
 
   let action: OrganizationProfileActionConfirmation
   let organization: Organization
@@ -62,7 +62,7 @@ struct OrganizationProfileActionConfirmationView: View {
               if let error {
                 ErrorText(error: error, alignment: .leading)
                   .font(theme.fonts.subheadline)
-                  .transition(.blurReplace.animation(.default))
+                  .clerkBlurReplaceTransition(.default)
                   .id(error.localizedDescription)
               }
           }
@@ -101,7 +101,7 @@ struct OrganizationProfileActionConfirmationView: View {
     .frame(minWidth: 420, maxWidth: 520)
     #endif
     .background(theme.colors.background)
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
   }
 }
 
@@ -188,8 +188,8 @@ enum OrganizationProfileActionConfirmation: Hashable, Identifiable {
     organization: .mock
   )
   .environment(\.clerkTheme, .clerk)
-  .environment(Clerk.preview())
-  .environment(
+  .environmentObject(Clerk.preview())
+  .environmentObject(
     OrganizationProfileBuiltInRouter(
       push: { _ in },
       dismissAction: { _ in }

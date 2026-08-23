@@ -8,7 +8,7 @@ import ClerkKit
 import SwiftUI
 
 struct OrganizationVerifiedDomainsView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
 
   @State private var domainsPager = OrganizationAccountListPager<OrganizationDomain>()
@@ -351,7 +351,7 @@ private struct OrganizationDomainVerificationFlowSheet: View {
   let onDomainChanged: @MainActor () -> Void
 
   @State private var path: [Destination] = []
-  @State private var codeLimiter = CodeLimiter()
+  @StateObject private var codeLimiter = CodeLimiter()
 
   private enum Destination: Hashable {
     case verifyCode(OrganizationDomain, affiliationEmailAddress: String)
@@ -380,7 +380,7 @@ private struct OrganizationDomainVerificationFlowSheet: View {
         }
       }
     }
-    .environment(codeLimiter)
+    .environmentObject(codeLimiter)
     #if os(macOS)
     .frame(minWidth: 420, maxWidth: 520)
     #endif
@@ -398,12 +398,13 @@ private enum PresentedDomainFlow: Hashable, Identifiable {
   }
 }
 
+@available(iOS 17.0, macOS 14.0, *)
 #Preview("Verified Domains") {
   @Previewable @State var navigationPath = NavigationPath()
 
   NavigationStack(path: $navigationPath) {
     OrganizationVerifiedDomainsView()
-      .environment(
+      .environmentObject(
         OrganizationProfileBuiltInRouter(
           push: { destination in
             navigationPath.append(destination)
@@ -416,7 +417,7 @@ private enum PresentedDomainFlow: Hashable, Identifiable {
           }
         )
       )
-      .environment(Clerk.preview { preview in
+      .environmentObject(Clerk.preview { preview in
         var membership = OrganizationMembership.mockWithUserData
         membership.permissions = [
           OrganizationSystemPermission.readDomains.rawValue,

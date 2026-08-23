@@ -9,7 +9,7 @@ import ClerkKit
 import SwiftUI
 
 struct UserProfilePhoneRow: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.locale) private var locale
 
@@ -110,7 +110,7 @@ struct UserProfilePhoneRow: View {
         .foregroundStyle(theme.colors.border)
     }
     .clerkErrorPresenting($error)
-    .onChange(of: removeResource) {
+    .clerkOnChange(of: removeResource) {
       if $1 != nil { isConfirmingRemoval = true }
     }
     .sheet(item: $addPhoneNumberDestination) {

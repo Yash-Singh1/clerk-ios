@@ -9,7 +9,7 @@ import SwiftUI
 
 /// A simplified user sheet shown during session tasks, displaying the user preview and a sign out option.
 struct UserButtonSignOutView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
 

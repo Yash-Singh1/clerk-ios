@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 
 struct UserProfilePasskeySection: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
 
   @State private var error: Error?

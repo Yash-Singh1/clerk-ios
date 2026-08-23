@@ -11,7 +11,7 @@ import PhotosUI
 import SwiftUI
 
 struct UserProfileUpdateProfileView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) private var dismiss
 
@@ -114,7 +114,7 @@ struct UserProfileUpdateProfileView: View {
         selection: $photosPickerItem,
         matching: .images
       )
-      .onChange(of: photosPickerItem) { _, item in
+      .clerkOnChange(of: photosPickerItem) { _, item in
         guard let item else { return }
 
         Task {
@@ -140,7 +140,7 @@ struct UserProfileUpdateProfileView: View {
     #if os(macOS)
     .frame(minWidth: 420, maxWidth: 520)
     #endif
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
     .background(theme.colors.background)
   }
 
@@ -170,7 +170,7 @@ struct UserProfileUpdateProfileView: View {
           .opacity(0.5)
       }
     }
-    .onChange(of: user.imageUrl) { _, newValue in
+    .clerkOnChange(of: user.imageUrl) { _, newValue in
       imageIsLoading = !newValue.isEmpty
     }
     .overlay {

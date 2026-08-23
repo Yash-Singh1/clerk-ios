@@ -10,7 +10,7 @@ import NukeUI
 import SwiftUI
 
 struct UserProfileExternalAccountRow: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.colorScheme) private var colorScheme
   @Environment(\.clerkUserProfileOAuthConfig) private var oauthConfig
   @Environment(\.clerkTheme) private var theme
@@ -113,7 +113,7 @@ struct UserProfileExternalAccountRow: View {
         .foregroundStyle(theme.colors.border)
     }
     .clerkErrorPresenting($error)
-    .onChange(of: removeResource) {
+    .clerkOnChange(of: removeResource) {
       if $1 != nil { isConfirmingRemoval = true }
     }
     .confirmationDialog(
@@ -206,7 +206,7 @@ extension UserProfileExternalAccountRow {
   UserProfileExternalAccountRow(externalAccount: .mockVerified)
   #elseif os(macOS)
   UserProfileExternalAccountRow(externalAccount: .mockVerified)
-    .environment(Clerk.preview())
+    .environmentObject(Clerk.preview())
     .padding()
   #endif
 }

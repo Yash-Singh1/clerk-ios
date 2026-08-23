@@ -9,7 +9,7 @@ import ClerkKit
 import SwiftUI
 
 struct UserProfileDetailView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
 
   @State private var addEmailAddressDestination: UserProfileAddEmailView.Destination?
@@ -154,7 +154,7 @@ struct UserProfileDetailView: View {
     #if os(iOS)
     .navigationBarTitleDisplayMode(.inline)
     #endif
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
     .background(theme.colors.background)
     .sheet(item: $addEmailAddressDestination) {
       UserProfileAddEmailView(desintation: $0)

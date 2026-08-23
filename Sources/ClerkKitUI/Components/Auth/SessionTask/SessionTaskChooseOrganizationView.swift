@@ -10,11 +10,11 @@ import SwiftUI
 /// A view shown when a session requires the user to choose or create an organization
 /// before the session can become active.
 struct SessionTaskChooseOrganizationView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
-  @Environment(AuthNavigation.self) private var navigation
+  @EnvironmentObject private var navigation: AuthNavigation
 
-  @State private var accountList = OrganizationAccountListDataSource()
+  @StateObject private var accountList = OrganizationAccountListDataSource()
   @State private var isSelectingOrganization = false
 
   let token: AuthFlowPresentationToken
