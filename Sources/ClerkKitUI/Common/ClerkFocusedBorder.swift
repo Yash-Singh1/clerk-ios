@@ -37,21 +37,29 @@ struct ClerkFocusedBorder: ViewModifier {
   var state: BorderState = .default
 
   func body(content: Content) -> some View {
+    if #available(iOS 17.0, macOS 14.0, *) {
+      content.animation(.default) {
+        decorated($0)
+      }
+    } else {
+      decorated(content)
+        .animation(.default, value: isFocused)
+        .animation(.default, value: state == .error)
+    }
+  }
+
+  private func decorated<DecoratedContent: View>(
+    _ content: DecoratedContent
+  ) -> some View {
     content
-      .animation(
-        .default,
-        body: { content in
-          content
-            .overlay {
-              RoundedRectangle(cornerRadius: theme.design.borderRadius)
-                .strokeBorder(innerBorderColor, lineWidth: 1)
-            }
-            .background {
-              RoundedRectangle(cornerRadius: theme.design.borderRadius)
-                .stroke(outerBorderColor, lineWidth: isFocused ? 4 : 0)
-            }
-        }
-      )
+      .overlay {
+        RoundedRectangle(cornerRadius: theme.design.borderRadius)
+          .strokeBorder(innerBorderColor, lineWidth: 1)
+      }
+      .background {
+        RoundedRectangle(cornerRadius: theme.design.borderRadius)
+          .stroke(outerBorderColor, lineWidth: isFocused ? 4 : 0)
+      }
   }
 }
 
@@ -61,6 +69,7 @@ extension View {
   }
 }
 
+@available(iOS 17.0, macOS 14.0, *)
 #Preview {
   @Previewable @Environment(\.clerkTheme) var theme
 

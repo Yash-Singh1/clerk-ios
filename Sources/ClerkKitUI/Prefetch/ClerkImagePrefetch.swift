@@ -73,11 +73,11 @@ extension View {
 }
 
 private struct ClerkImagePrefetchModifier: ViewModifier {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
 
   func body(content: Content) -> some View {
     content
-      .onChange(of: clerk.environment, initial: true) {
+      .clerkOnChange(of: clerk.environment, initial: true) {
         clerk.prefetchImages()
       }
   }

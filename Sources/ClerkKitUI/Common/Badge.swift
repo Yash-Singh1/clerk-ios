@@ -120,9 +120,7 @@ extension View {
       if isVisible {
         Badge(key: "Last used", style: .secondary)
           .padding(.trailing, 8)
-          .visualEffect { content, proxy in
-            content.offset(y: -proxy.size.height / 2)
-          }
+          .clerkLastUsedBadgeOffset()
       }
     }
   }

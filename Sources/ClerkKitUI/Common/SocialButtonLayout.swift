@@ -64,7 +64,7 @@ struct SocialButtonLayout<Content: View>: View {
     .frame(maxWidth: .infinity)
     .padding()
   }
-  .environment(Clerk.preview())
+  .environmentObject(Clerk.preview())
 }
 
 #endif

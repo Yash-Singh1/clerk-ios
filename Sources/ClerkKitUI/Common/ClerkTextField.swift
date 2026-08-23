@@ -68,17 +68,21 @@ struct ClerkTextField: View {
             TextField("", text: $text)
               .zIndex(revealText ? 1 : 0)
               .focused($focused, equals: .regular)
-              .animation(.default) {
-                $0.opacity(!isSecure || revealText ? 1 : 0)
-              }
+              .clerkAnimatedOpacity(
+                !isSecure || revealText ? 1 : 0,
+                animation: .default,
+                value: revealText
+              )
 
             if isSecure {
               SecureField("", text: $text)
                 .zIndex(revealText ? 0 : 1)
                 .focused($focused, equals: .secure)
-                .animation(.default) {
-                  $0.opacity(isSecure && !revealText ? 1 : 0)
-                }
+                .clerkAnimatedOpacity(
+                  isSecure && !revealText ? 1 : 0,
+                  animation: .default,
+                  value: revealText
+                )
             }
           }
           .lineLimit(1)
@@ -86,15 +90,17 @@ struct ClerkTextField: View {
           .foregroundStyle(theme.colors.inputForeground)
           .frame(minHeight: 22)
           .tint(theme.colors.primary)
-          .animation(.default.delay(0.2)) {
-            $0.opacity(isFocusedOrFilled ? 1 : 0.0001)
-          }
-          .onChange(of: focused) { _, newValue in
+          .clerkAnimatedOpacity(
+            isFocusedOrFilled ? 1 : 0.0001,
+            animation: .default.delay(0.2),
+            value: isFocusedOrFilled
+          )
+          .clerkOnChange(of: focused) { _, newValue in
             if newValue != nil {
               focused = revealText ? .regular : .secure
             }
           }
-          .onChange(of: revealText) { _, _ in
+          .clerkOnChange(of: revealText) { _, _ in
             if focused == .regular {
               focused = .secure
             } else if focused == .secure {
@@ -128,7 +134,7 @@ struct ClerkTextField: View {
             .resizable()
             .scaledToFit()
             .frame(width: 18)
-            .contentTransition(.symbolEffect(.replace))
+            .clerkSymbolReplaceTransition()
             .foregroundStyle(theme.colors.mutedForeground)
         }
         .frame(width: 24)
@@ -162,6 +168,7 @@ struct ClerkTextField: View {
   }
 }
 
+@available(iOS 17.0, macOS 14.0, *)
 #Preview {
   @Previewable @State var emptyEmail = ""
   @Previewable @State var filledEmail = "user@example.com"

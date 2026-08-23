@@ -26,7 +26,7 @@ import SwiftUI
 ///
 /// ```swift
 /// struct HomeView: View {
-///   @Environment(Clerk.self) private var clerk
+///   @EnvironmentObject private var clerk: Clerk
 ///   @State private var authIsPresented = false
 ///
 ///   var body: some View {
@@ -53,7 +53,7 @@ import SwiftUI
 ///
 /// ```swift
 /// struct ProfileView: View {
-///   @Environment(Clerk.self) private var clerk
+///   @EnvironmentObject private var clerk: Clerk
 ///
 ///   var body: some View {
 ///     Group {
@@ -67,15 +67,15 @@ import SwiftUI
 /// }
 /// ```
 public struct AuthView: View {
-  @Environment(Clerk.self) var clerk
+  @EnvironmentObject var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.dismiss) var dismiss
   @Environment(\.clerkAuthFlowCompletionAction) var authFlowCompletionAction
   /// Navigation state for the auth flow.
-  @State var navigation = AuthNavigation()
+  @StateObject var navigation = AuthNavigation()
 
   /// Form field state for auth views.
-  @State var authState: AuthState
+  @StateObject var authState: AuthState
 
   /// Configuration values for the auth flow.
   private let config: AuthConfig
@@ -93,7 +93,7 @@ public struct AuthView: View {
   @State var reportedConflictingAuthFlowOwnerId: UUID?
 
   /// Rate limiter for verification codes.
-  @State private var codeLimiter = CodeLimiter()
+  @StateObject private var codeLimiter = CodeLimiter()
 
   /// The authentication mode that determines which flows are available to the user.
   public enum Mode: String {
@@ -131,7 +131,7 @@ public struct AuthView: View {
     isDismissible: Bool = true,
     config: AuthConfig
   ) {
-    _authState = State(initialValue: AuthState(mode: mode, config: config))
+    _authState = StateObject(wrappedValue: AuthState(mode: mode, config: config))
     self.isDismissible = isDismissible
     self.config = config
   }
@@ -153,14 +153,14 @@ public struct AuthView: View {
             }
             #endif
             .authFooter(macOSDismissAction: showDismissButton ? { dismissAuthView() } : nil)
-            .environment(navigation)
-            .environment(authState)
-            .environment(codeLimiter)
+            .environmentObject(navigation)
+            .environmentObject(authState)
+            .environmentObject(codeLimiter)
         }
         .authFooter(macOSDismissAction: showDismissButton ? { dismissAuthView() } : nil)
     }
     .background(theme.colors.background)
-    .presentationBackground(theme.colors.background)
+    .clerkPresentationBackground(theme.colors.background)
     #if os(macOS)
     .frame(
       width: isDismissible ? 560 : nil,
@@ -170,9 +170,9 @@ public struct AuthView: View {
     #endif
     .tint(theme.colors.primary)
     .clerkErrorPresenting($error)
-    .environment(navigation)
-    .environment(authState)
-    .environment(codeLimiter)
+    .environmentObject(navigation)
+    .environmentObject(authState)
+    .environmentObject(codeLimiter)
     .environment(\.authFlowRequestOwnerId, authFlowRegistration?.id)
     .onAppear {
       registerAuthFlowIfNeeded()
@@ -201,7 +201,7 @@ public struct AuthView: View {
       registerAuthFlowIfNeeded()
       await reconcileAuthFlow()
     }
-    .onChange(of: clerk.user) { _, newUser in
+    .clerkOnChange(of: clerk.user) { _, newUser in
       guard newUser == nil else { return }
 
       if isDismissible, navigation.presentedAuthFlowToken != nil {
@@ -213,7 +213,7 @@ public struct AuthView: View {
         registerAuthFlowIfNeeded()
       }
     }
-    .onChange(of: config) { _, newConfig in
+    .clerkOnChange(of: config) { _, newConfig in
       authState.configure(newConfig)
     }
     .onOpenURL { url in

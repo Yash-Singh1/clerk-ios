@@ -6,6 +6,7 @@
 #if os(iOS) || os(macOS)
 
 import ClerkKit
+import Combine
 import Foundation
 import SwiftUI
 
@@ -14,10 +15,9 @@ import SwiftUI
 /// This class handles navigation path management and routing based on SignIn/SignUp status.
 /// It is injected into child views via the environment.
 @MainActor
-@Observable
-final class AuthNavigation {
+final class AuthNavigation: ObservableObject {
   /// The navigation path for the auth flow.
-  var path: [AuthView.Destination] = []
+  @Published var path: [AuthView.Destination] = []
 
   /// Creates a new AuthNavigation instance.
   init() {}

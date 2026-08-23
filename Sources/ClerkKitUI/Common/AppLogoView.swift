@@ -10,7 +10,7 @@ import NukeUI
 import SwiftUI
 
 struct AppLogoView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkAppIcon) private var appIconOverride
   @Environment(\.clerkAppIconMaxHeight) private var appIconMaxHeight
   @Environment(\.clerkAppIconView) private var appIconViewOverride

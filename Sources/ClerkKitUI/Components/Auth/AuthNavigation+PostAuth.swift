@@ -8,44 +8,8 @@
 import ClerkKit
 
 extension AuthNavigation {
-  func nextPendingSessionTask(from session: Session?) -> Session.Task? {
-    session?.pendingTasks.first
-  }
-
   var presentedAuthFlowToken: AuthFlowPresentationToken? {
     path.reversed().compactMap(\.authFlowPresentationToken).first
-  }
-
-  @discardableResult
-  func routeToSessionTaskStart(
-    session: Session,
-    token: AuthFlowPresentationToken
-  ) -> Bool {
-    guard token.kind == .sessionTasks,
-          session.id == token.sessionId
-    else {
-      return false
-    }
-    if presentedAuthFlowToken == token {
-      return true
-    }
-
-    synchronizePostAuthPath(with: token)
-    guard let task = nextPendingSessionTask(from: session) else { return false }
-    path.append(.sessionTaskStart(task: task, token: token))
-    return true
-  }
-
-  @discardableResult
-  func appendPostAuthDestination(_ destination: AuthView.Destination) -> Bool {
-    guard let token = destination.authFlowPresentationToken,
-          token.kind == .sessionTasks,
-          presentedAuthFlowToken == token
-    else {
-      return false
-    }
-    path.append(destination)
-    return true
   }
 
   func routeToTrustedDeviceEnrollment(
@@ -84,16 +48,6 @@ extension AuthNavigation {
 
   func resetForNewAuthFlow() {
     path = []
-  }
-
-  var hasSessionTaskStartInPath: Bool {
-    path.contains { destination in
-      if case .sessionTaskStart = destination {
-        true
-      } else {
-        false
-      }
-    }
   }
 
   var hasTrustedDeviceEnrollmentInPath: Bool {

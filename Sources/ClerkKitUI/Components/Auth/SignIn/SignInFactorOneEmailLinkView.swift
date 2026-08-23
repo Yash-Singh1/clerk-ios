@@ -9,10 +9,10 @@ import ClerkKit
 import SwiftUI
 
 struct EmailLinkVerificationView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
-  @Environment(AuthNavigation.self) private var navigation
-  @Environment(AuthState.self) private var authState
+  @EnvironmentObject private var navigation: AuthNavigation
+  @EnvironmentObject private var authState: AuthState
   @Environment(\.authFlowRequestOwnerId) private var authFlowRequestOwnerId
   @Environment(\.openURL) private var openURL
 

@@ -9,7 +9,7 @@ import ClerkKit
 import SwiftUI
 
 struct GetHelpView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
   @Environment(\.openURL) private var openURL
 

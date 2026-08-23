@@ -6,6 +6,7 @@
 #if os(iOS) || os(macOS)
 
 import ClerkKit
+import Combine
 import Foundation
 import SwiftUI
 
@@ -13,34 +14,33 @@ import SwiftUI
 ///
 /// This class stores user input for auth start, sign-in, and sign-up forms.
 @MainActor
-@Observable
-final class AuthState {
+final class AuthState: ObservableObject {
   /// The authentication mode (signIn, signUp, or signInOrUp).
   let mode: AuthView.Mode
 
   /// Whether identifier values are persisted to `UserDefaults` between sessions.
-  private(set) var persistsIdentifiers: Bool = true
+  @Published private(set) var persistsIdentifiers: Bool = true
 
   /// Whether the configure method received an initial identifier value.
-  private(set) var hasInitialIdentifier: Bool = false
+  @Published private(set) var hasInitialIdentifier: Bool = false
 
   /// Whether the non-phone auth-start identifier field was populated from configuration.
-  private(set) var authStartIdentifierWasPrefilled: Bool = false
+  @Published private(set) var authStartIdentifierWasPrefilled: Bool = false
 
   /// Whether the phone auth-start identifier field was populated from configuration.
-  private(set) var authStartPhoneNumberWasPrefilled: Bool = false
+  @Published private(set) var authStartPhoneNumberWasPrefilled: Bool = false
 
   /// Whether the configure method received an initial first name value.
-  private(set) var hasInitialFirstName: Bool = false
+  @Published private(set) var hasInitialFirstName: Bool = false
 
   /// Whether the configure method received an initial last name value.
-  private(set) var hasInitialLastName: Bool = false
+  @Published private(set) var hasInitialLastName: Bool = false
 
   /// Whether configured initial values should be shown as read-only fields.
-  private(set) var prefilledFieldsAreLocked = false
+  @Published private(set) var prefilledFieldsAreLocked = false
 
   /// Unsafe metadata to attach if the current UI flow creates a sign-up.
-  private(set) var unsafeMetadata: JSON?
+  @Published private(set) var unsafeMetadata: JSON?
 
   private var environmentRefreshCheckpoint: Clerk.EnvironmentRefreshCheckpoint?
 
@@ -70,7 +70,7 @@ final class AuthState {
   }
 
   /// Auth Start Fields
-  var authStartIdentifier = "" {
+  @Published var authStartIdentifier = "" {
     didSet {
       if persistsIdentifiers {
         userDefaults.set(authStartIdentifier, forKey: Self.identifierStorageKey)
@@ -78,7 +78,7 @@ final class AuthState {
     }
   }
 
-  var authStartPhoneNumber = "" {
+  @Published var authStartPhoneNumber = "" {
     didSet {
       if persistsIdentifiers {
         userDefaults.set(authStartPhoneNumber, forKey: Self.phoneNumberStorageKey)
@@ -86,7 +86,7 @@ final class AuthState {
     }
   }
 
-  var authStartPhoneNumberFieldIsActive = false {
+  @Published var authStartPhoneNumberFieldIsActive = false {
     didSet {
       if persistsIdentifiers {
         userDefaults.set(authStartPhoneNumberFieldIsActive, forKey: Self.phoneNumberFieldIsActiveStorageKey)
@@ -144,19 +144,19 @@ final class AuthState {
   }
 
   // Sign In Fields
-  var signInPassword = ""
-  var signInNewPassword = ""
-  var signInConfirmNewPassword = ""
-  var signInBackupCode = ""
+  @Published var signInPassword = ""
+  @Published var signInNewPassword = ""
+  @Published var signInConfirmNewPassword = ""
+  @Published var signInBackupCode = ""
 
   // Sign Up Fields
-  var signUpFirstName = ""
-  var signUpLastName = ""
-  var signUpPassword = ""
-  var signUpUsername = ""
-  var signUpEmailAddress = ""
-  var signUpPhoneNumber = ""
-  var signUpLegalAccepted = false
+  @Published var signUpFirstName = ""
+  @Published var signUpLastName = ""
+  @Published var signUpPassword = ""
+  @Published var signUpUsername = ""
+  @Published var signUpEmailAddress = ""
+  @Published var signUpPhoneNumber = ""
+  @Published var signUpLegalAccepted = false
 }
 
 enum AuthStartField {

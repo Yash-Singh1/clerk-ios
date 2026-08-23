@@ -36,17 +36,8 @@ struct OTPField: View {
         otpFieldInput(index: index)
       }
     }
-    .phaseAnimator(
-      [0, 10, -10, 10, -5, 5, 0], trigger: errorTrigger,
-      content: { content, offset in
-        content
-          .offset(x: offset)
-      },
-      animation: { _ in
-        .linear(duration: 0.06)
-      }
-    )
-    .sensoryFeedback(.error, trigger: errorTrigger)
+    .clerkErrorShake(trigger: errorTrigger)
+    .clerkSensoryFeedback(.error, trigger: errorTrigger)
     .overlay {
       TextField("", text: $code)
         .focused($isFocused)
@@ -61,7 +52,7 @@ struct OTPField: View {
         .tint(.clear)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    .onChange(of: code) { oldValue, newValue in
+    .clerkOnChange(of: code) { oldValue, newValue in
       let previousCode = String(oldValue.prefix(numberOfInputs))
       code = String(newValue.prefix(numberOfInputs))
       if previousCode == code { return }
@@ -74,7 +65,7 @@ struct OTPField: View {
         fieldState = .default
       }
     }
-    .onChange(
+    .clerkOnChange(
       of: fieldState,
       { _, newValue in
         if newValue == .error {
@@ -179,12 +170,10 @@ struct OTPField: View {
     Rectangle()
       .frame(maxWidth: 2, maxHeight: 0.35 * inputSize.height)
       .foregroundStyle(theme.colors.primary)
-      .animation(
-        .easeInOut.speed(0.75).repeatForever(),
-        body: { content in
-          content
-            .opacity(cursorAnimating ? 1 : 0)
-        }
+      .clerkAnimatedOpacity(
+        cursorAnimating ? 1 : 0,
+        animation: .easeInOut.speed(0.75).repeatForever(),
+        value: cursorAnimating
       )
       .onAppear {
         cursorAnimating.toggle()
@@ -192,6 +181,7 @@ struct OTPField: View {
   }
 }
 
+@available(iOS 17.0, macOS 14.0, *)
 #Preview {
   @Previewable @State var code = ""
   @Previewable @State var fieldState1 = OTPField.FieldState.default

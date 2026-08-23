@@ -21,7 +21,7 @@ extension View {
 }
 
 private struct AuthFooterModifier: ViewModifier {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
 
   let macOSDismissAction: (() -> Void)?
 
@@ -58,7 +58,7 @@ private struct AuthFooterModifier: ViewModifier {
 }
 
 private struct AuthFooter: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
 
   let macOSDismissAction: (() -> Void)?

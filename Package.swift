@@ -7,7 +7,7 @@ let package = Package(
   name: "Clerk",
   defaultLocalization: "en",
   platforms: [
-    .iOS(.v17),
+    .iOS(.v16),
     .macCatalyst(.v17),
     .macOS(.v14),
     .watchOS(.v10),
@@ -45,6 +45,13 @@ let package = Package(
         .product(name: "PhoneNumberKit", package: "PhoneNumberKit"),
       ],
       path: "Sources/ClerkKitUI",
+      // This branch backports only the authentication surface used by T3 Code.
+      exclude: [
+        "Components/Auth/SessionTask",
+        "Components/Organization",
+        "Components/UserButton",
+        "Components/UserProfile",
+      ],
       resources: [
         .process("Resources"),
       ],
@@ -62,6 +69,7 @@ let package = Package(
       ],
       path: "Tests",
       exclude: [
+        "Domains/Organization/OrganizationAccountListDataSourceTests.swift",
         "UI",
       ],
       resources: [
@@ -78,6 +86,9 @@ let package = Package(
         "ClerkKitUI",
       ],
       path: "Tests/UI",
+      exclude: [
+        "AuthNavigationTests.swift",
+      ],
       swiftSettings: [
         .enableUpcomingFeature("StrictConcurrency"),
       ]

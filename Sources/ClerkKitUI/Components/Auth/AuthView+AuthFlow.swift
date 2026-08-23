@@ -11,13 +11,11 @@ import SwiftUI
 extension AuthView {
   enum PostAuthStep: Equatable {
     case trustedDeviceEnrollment
-    case sessionTasks
     case complete
   }
 
   static let postAuthStepOrder: [PostAuthStep] = [
     .trustedDeviceEnrollment,
-    .sessionTasks,
     .complete,
   ]
 
@@ -46,7 +44,6 @@ extension AuthView {
 
   var showDismissButton: Bool {
     isDismissible &&
-      !navigation.hasSessionTaskStartInPath &&
       !navigation.hasTrustedDeviceEnrollmentInPath
   }
 
@@ -179,14 +176,6 @@ extension AuthView {
         ) {
           return
         }
-      case .sessionTasks:
-        if routeToSessionTaskIfNeeded(
-          session: session,
-          owner: owner,
-          work: work
-        ) {
-          return
-        }
       case .complete:
         guard session.status == .active else { continue }
         completeAuthFlow(owner: owner, work: work)
@@ -200,33 +189,13 @@ extension AuthView {
 
     switch token.kind {
     case .sessionTasks:
-      _ = navigation.routeToSessionTaskStart(session: session, token: token)
+      break
     case .trustedDeviceEnrollment:
       navigation.routeToTrustedDeviceEnrollment(
         token: token,
         biometryDisplayName: .current()
       )
     }
-  }
-
-  @discardableResult
-  private func routeToSessionTaskIfNeeded(
-    session: Session,
-    owner: AuthFlowRegistration?,
-    work: AuthFlowWork
-  ) -> Bool {
-    guard let owner,
-          session.status == .pending,
-          !session.pendingTasks.isEmpty,
-          let token = clerk.startAuthFlowPresentation(
-            for: owner,
-            work: work,
-            presentation: .sessionTasks
-          )
-    else {
-      return false
-    }
-    return navigation.routeToSessionTaskStart(session: session, token: token)
   }
 
   private func completeAuthFlow(

@@ -9,7 +9,7 @@ import ClerkKit
 import SwiftUI
 
 struct TrustedDeviceEnrollmentView: View {
-  @Environment(Clerk.self) private var clerk
+  @EnvironmentObject private var clerk: Clerk
   @Environment(\.clerkTheme) private var theme
 
   private let biometryDisplayName: TrustedDeviceBiometryDisplayName

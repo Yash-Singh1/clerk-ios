@@ -26,21 +26,6 @@ extension AuthView {
     case signUpEmailLink
     case signUpCompleteProfile
 
-    case sessionTaskStart(task: Session.Task, token: AuthFlowPresentationToken)
-    case taskMfaSmsChooseNumber(token: AuthFlowPresentationToken)
-    case taskVerifySms(phoneNumber: PhoneNumber, token: AuthFlowPresentationToken)
-    case taskMfaTotp(totpResource: TOTPResource, token: AuthFlowPresentationToken)
-    case taskVerifyTotp(token: AuthFlowPresentationToken)
-    case sessionTaskCreateOrganization(
-      creationDefaults: OrganizationCreationDefaults?,
-      token: AuthFlowPresentationToken
-    )
-    case backupCodes(
-      backupCodes: [String],
-      mfaType: SessionTaskBackupCodesView.BackupCodesMfaType,
-      token: AuthFlowPresentationToken
-    )
-
     case trustedDeviceEnrollment(
       biometryDisplayName: TrustedDeviceBiometryDisplayName,
       token: AuthFlowPresentationToken
@@ -82,28 +67,6 @@ extension AuthView {
         EmailLinkVerificationView(mode: .signUp)
       case .signUpCompleteProfile:
         SignUpCompleteProfileView()
-      case .sessionTaskStart(let task, let token):
-        SessionTaskStartView(task: task, token: token)
-      case .taskMfaSmsChooseNumber(let token):
-        SessionTaskMfaSmsChooseNumberView(token: token)
-      case .taskVerifySms(let phoneNumber, let token):
-        SessionTaskMfaVerifySmsView(phoneNumber: phoneNumber, token: token)
-      case .taskMfaTotp(let totpResource, let token):
-        SessionTaskMfaTotpView(totp: totpResource, token: token)
-      case .sessionTaskCreateOrganization(let creationDefaults, let token):
-        SessionTaskCreateOrganizationView(
-          creationDefaults: creationDefaults,
-          showBackButton: true,
-          token: token
-        )
-      case .taskVerifyTotp(let token):
-        SessionTaskMfaVerifyTotpView(token: token)
-      case .backupCodes(let backupCodes, let mfaType, let token):
-        SessionTaskBackupCodesView(
-          backupCodes: backupCodes,
-          mfaType: mfaType,
-          token: token
-        )
       case let .trustedDeviceEnrollment(biometryDisplayName, token):
         TrustedDeviceEnrollmentView(
           biometryDisplayName: biometryDisplayName,
@@ -116,14 +79,7 @@ extension AuthView {
       switch self {
       case .signInSetNewPassword(let token):
         token
-      case .sessionTaskStart(_, let token),
-           .taskMfaSmsChooseNumber(let token),
-           .taskVerifySms(_, let token),
-           .taskMfaTotp(_, let token),
-           .taskVerifyTotp(let token),
-           .sessionTaskCreateOrganization(_, let token),
-           .backupCodes(_, _, let token),
-           .trustedDeviceEnrollment(_, let token):
+      case .trustedDeviceEnrollment(_, let token):
         token
       default:
         nil

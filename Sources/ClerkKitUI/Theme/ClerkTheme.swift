@@ -5,6 +5,7 @@
 
 #if os(iOS) || os(macOS)
 
+import Combine
 import Foundation
 import SwiftUI
 
@@ -15,16 +16,15 @@ import SwiftUI
 /// view, or override individual properties such as
 /// `.environment(\.clerkTheme.colors.primary, ...)` for more targeted changes.
 @MainActor
-@Observable
-public class ClerkTheme {
+public class ClerkTheme: ObservableObject {
   /// Color tokens used throughout ClerkKitUI components.
-  public var colors: Colors
+  @Published public var colors: Colors
 
   /// Typography tokens mapped to Dynamic Type text styles.
-  public var fonts: Fonts
+  @Published public var fonts: Fonts
 
   /// Shared design tokens such as corner radius.
-  public var design: Design
+  @Published public var design: Design
 
   /// Creates a new theme.
   ///

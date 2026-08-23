@@ -113,6 +113,7 @@ extension ButtonStyle where Self == SecondaryButtonStyle {
   }
 }
 
+@available(iOS 17.0, macOS 14.0, *)
 #Preview {
   @Previewable @Environment(\.clerkTheme) var theme
 

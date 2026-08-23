@@ -5,18 +5,18 @@
 
 #if os(iOS) || os(macOS)
 
+import Combine
 import PhoneNumberKit
 import SwiftUI
 
 extension ClerkPhoneNumberField {
-  @Observable
   @MainActor
-  final class PhoneNumberModel {
+  final class PhoneNumberModel: ObservableObject {
     private let utility = PhoneNumberUtility()
     let partialFormatter: PartialFormatter
 
     let defaultCountry: ClerkPhoneCountry
-    var currentCountry: ClerkPhoneCountry {
+    @Published var currentCountry: ClerkPhoneCountry {
       didSet {
         partialFormatter.defaultRegion = currentCountry.code
       }
@@ -98,7 +98,7 @@ extension ClerkPhoneNumberField {
 
 struct ClerkPhoneNumberField: View {
   @Environment(\.clerkTheme) private var theme
-  @State private var phoneNumberModel = PhoneNumberModel()
+  @StateObject private var phoneNumberModel = PhoneNumberModel()
   @State private var reservedHeight: CGFloat?
   @State var displayText = ""
   @FocusState private var isFocused: Bool
@@ -214,10 +214,12 @@ struct ClerkPhoneNumberField: View {
               .keyboardType(.numberPad)
               #endif
               .tint(theme.colors.primary)
-              .animation(.default.delay(0.2)) {
-                $0.opacity(isFocusedOrFilled ? 1 : 0)
-              }
-              .onChange(of: displayText) { _, newValue in
+              .clerkAnimatedOpacity(
+                isFocusedOrFilled ? 1 : 0,
+                animation: .default.delay(0.2),
+                value: isFocusedOrFilled
+              )
+              .clerkOnChange(of: displayText) { _, newValue in
                 textDidUpdate(text: newValue)
               }
           }
@@ -268,6 +270,7 @@ struct ClerkPhoneNumberField: View {
   }
 }
 
+@available(iOS 17.0, macOS 14.0, *)
 #Preview {
   @Previewable @State var emptyEmail = ""
   @Previewable @State var filledEmail = "5555550100"
