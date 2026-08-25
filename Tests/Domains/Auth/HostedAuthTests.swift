@@ -29,6 +29,31 @@ struct HostedAuthProtocolTests {
   }
 
   @Test
+  func hostedAuthResourcePrefillsTrimmedEmailWithoutDroppingPortalState() throws {
+    let resource = HostedAuthResource(
+      object: "hosted_auth",
+      url: "https://accounts.example.com/sign-in?transfer=token&email_address=old%40example.com#/start"
+    )
+
+    let url = try resource.authenticationUrl(initialEmailAddress: "  person+tag@example.com \n")
+    let components = try #require(URLComponents(url: url, resolvingAgainstBaseURL: false))
+
+    #expect(components.fragment == "/start")
+    #expect(components.queryItems?.filter { $0.name == "transfer" }.map(\.value) == ["token"])
+    #expect(components.queryItems?.filter { $0.name == "email_address" }.map(\.value) == ["person+tag@example.com"])
+  }
+
+  @Test
+  func hostedAuthResourceIgnoresBlankInitialEmail() throws {
+    let resource = HostedAuthResource(
+      object: "hosted_auth",
+      url: "https://accounts.example.com/sign-in?transfer=token"
+    )
+
+    #expect(try resource.authenticationUrl(initialEmailAddress: "  \n").absoluteString == resource.url)
+  }
+
+  @Test
   func generatedStateIsRandomAndNonEmpty() throws {
     let first = try HostedAuthState.generate()
     let second = try HostedAuthState.generate()
@@ -187,6 +212,7 @@ struct HostedAuthFlowTests {
 
     let session = try await Clerk.shared.auth.performHostedAuth(
       mode: .signUp,
+      initialEmailAddress: "person+tag@example.com",
       redirectUrl: "myapp:///hosted-auth-callback",
       prefersEphemeralWebBrowserSession: false,
       webAuthentication: { url, callbackUrlScheme, prefersEphemeral in
@@ -220,7 +246,7 @@ struct HostedAuthFlowTests {
     #expect(redeemParams.value?.rotatingTokenNonce == "nonce_123")
     #expect(setActiveCall.value == HostedAuthSetActiveCall(sessionId: Session.mock2.id, organizationId: nil))
     #expect(try browserInputs.value == HostedAuthBrowserInputs(
-      url: #require(URL(string: "https://accounts.example.com/sign-in")),
+      url: #require(URL(string: "https://accounts.example.com/sign-in?email_address=person%2Btag%40example.com")),
       callbackUrlScheme: "myapp",
       prefersEphemeralWebBrowserSession: false
     ))

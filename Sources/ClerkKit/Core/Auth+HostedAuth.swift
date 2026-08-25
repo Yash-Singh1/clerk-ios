@@ -27,6 +27,7 @@ extension Auth {
   ///
   /// - Parameters:
   ///   - mode: The Account Portal screen to open. When omitted, Account Portal opens sign-in.
+  ///   - initialEmailAddress: An email address to prefill in Account Portal. Empty values are ignored.
   ///   - redirectUrl: A custom-scheme callback URL. Defaults to Clerk's configured redirect URL,
   ///     which is `{bundleIdentifier}://callback` unless overridden. The web authentication session
   ///     delivers the callback directly, so the scheme does not need to be registered in the
@@ -37,11 +38,13 @@ extension Auth {
   @discardableResult
   public func startHostedAuth(
     mode: HostedAuthMode? = nil,
+    initialEmailAddress: String? = nil,
     redirectUrl: String? = nil,
     prefersEphemeralWebBrowserSession: Bool = false
   ) async throws -> Session {
     try await performHostedAuth(
       mode: mode,
+      initialEmailAddress: initialEmailAddress,
       redirectUrl: redirectUrl,
       prefersEphemeralWebBrowserSession: prefersEphemeralWebBrowserSession,
       webAuthentication: Self.startHostedAuthWebAuthentication
@@ -51,6 +54,7 @@ extension Auth {
   @discardableResult
   func performHostedAuth(
     mode: HostedAuthMode?,
+    initialEmailAddress: String? = nil,
     redirectUrl: String?,
     prefersEphemeralWebBrowserSession: Bool,
     webAuthentication: HostedAuthWebAuthentication
@@ -83,7 +87,7 @@ extension Auth {
       try await clerk.refreshClient(skipClientId: true)
       hostedAuth = try await hostedAuthService.create(params: createParams)
     }
-    let hostedAuthUrl = try hostedAuth.authenticationUrl()
+    let hostedAuthUrl = try hostedAuth.authenticationUrl(initialEmailAddress: initialEmailAddress)
 
     try Task.checkCancellation()
     try runtime.validateStableRuntime()

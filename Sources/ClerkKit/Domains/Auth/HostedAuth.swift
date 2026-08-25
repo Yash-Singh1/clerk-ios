@@ -39,21 +39,41 @@ struct HostedAuthResource: Codable {
   let object: String
   let url: String
 
-  func authenticationUrl() throws -> URL {
+  func authenticationUrl(initialEmailAddress: String? = nil) throws -> URL {
     guard
       object == "hosted_auth",
-      let components = URLComponents(string: url),
+      var components = URLComponents(string: url),
       let scheme = components.scheme?.lowercased(),
       let host = components.host,
       !host.isEmpty,
       components.user == nil,
       components.password == nil,
-      let url = components.url,
       scheme == "https"
     else {
       throw ClerkClientError(message: "Hosted auth creation returned an invalid response.", localizationBundle: .module)
     }
-    return url
+
+    if let initialEmailAddress {
+      let emailAddress = initialEmailAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+      if !emailAddress.isEmpty {
+        let unreservedCharacters = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-._~"))
+        guard let percentEncodedEmailAddress = emailAddress.addingPercentEncoding(
+          withAllowedCharacters: unreservedCharacters
+        ) else {
+          throw ClerkClientError(message: "Hosted auth creation returned an invalid response.", localizationBundle: .module)
+        }
+
+        var queryItems = components.percentEncodedQueryItems ?? []
+        queryItems.removeAll { $0.name.removingPercentEncoding == "email_address" }
+        queryItems.append(URLQueryItem(name: "email_address", value: percentEncodedEmailAddress))
+        components.percentEncodedQueryItems = queryItems
+      }
+    }
+
+    guard let authenticationUrl = components.url else {
+      throw ClerkClientError(message: "Hosted auth creation returned an invalid response.", localizationBundle: .module)
+    }
+    return authenticationUrl
   }
 }
 
